@@ -41,4 +41,5 @@ public class Review extends BaseTimeEntity {
         this.user = user;
         this.reservation = reservation;
     }
+
 }
