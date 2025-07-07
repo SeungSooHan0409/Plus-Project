@@ -1,5 +1,6 @@
 package com.example.plusproject.domain.review.entity;
 
+import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.common.entity.BaseTimeEntity;
 import com.example.plusproject.domain.reservation.entity.Reservation;
 import com.example.plusproject.domain.user.entity.User;
@@ -27,6 +28,10 @@ public class Review extends BaseTimeEntity {
     @OneToOne
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
+
+    @ManyToOne
+    @JoinColumn(name = "accommodation_id")
+    private Accommodation accommodation;
 
 
     public Review(int rating, String content, String imageUrl, User user, Reservation reservation) {
