@@ -1,0 +1,39 @@
+package com.example.plusproject.domain.review.entity;
+
+import com.example.plusproject.domain.common.entity.BaseTimeEntity;
+import com.example.plusproject.domain.reservation.entity.Reservation;
+import com.example.plusproject.domain.user.entity.User;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@Entity
+@Table
+@NoArgsConstructor
+public class Review extends BaseTimeEntity {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private int rating;
+    private String content;
+    private String imageUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToOne
+    @JoinColumn(name = "reservation_id")
+    private Reservation reservation;
+
+
+    public Review(int rating, String content, String imageUrl, User user, Reservation reservation) {
+        this.rating = rating;
+        this.content = content;
+        this.imageUrl = imageUrl;
+        this.user = user;
+        this.reservation = reservation;
+    }
+}
