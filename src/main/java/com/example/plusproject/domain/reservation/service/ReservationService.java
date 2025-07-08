@@ -1,12 +1,16 @@
 package com.example.plusproject.domain.reservation.service;
 
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
+import com.example.plusproject.domain.reservation.dto.PageResponseDto;
 import com.example.plusproject.domain.reservation.dto.ReservationData;
 import com.example.plusproject.domain.reservation.dto.ResponseDto;
 import com.example.plusproject.domain.reservation.entity.Reservation;
 import com.example.plusproject.domain.reservation.repository.ReservationRepository;
 import com.example.plusproject.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,6 +23,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     // Accommodation 과 merge 하면 주석 해제
 //    private final AccommodationServcie accommodationServcie;
+
 
     // 숙소예약 메서드
     public ResponseDto reserveAccommodation(Long guestCount, LocalDate checkInDate, String accommodationAddress) {
@@ -63,6 +68,25 @@ public class ReservationService {
         ResponseDto responseDto = new ResponseDto(true, "예약 성공!", data, LocalDateTime.now());
 
         return responseDto;
+
+    }
+
+
+    // 예약 목록 조회 메서드
+    public PageResponseDto getReservationPage(int page, int size) {
+
+        // Pageable 생성
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        // 예약목록을 Page 로 조회
+        Page<Reservation> reservations = reservationRepository.findAllByOrderByCreatedAt(pageable);
+
+        // data 생성
+        Page<ReservationData> data = reservations.map(Reservation::toData);
+
+        return new PageResponseDto(true, "조회 성공!", data, LocalDateTime.now());
+
+
 
     }
 
