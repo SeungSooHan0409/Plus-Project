@@ -2,6 +2,7 @@ package com.example.plusproject.domain.reservation.entity;
 
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.common.entity.BaseTimeEntity;
+import com.example.plusproject.domain.reservation.dto.ReservationData;
 import com.example.plusproject.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -39,5 +40,14 @@ public class Reservation extends BaseTimeEntity {
         this.user = user;
         this.checkInDate = checkInDate;
         this.guestCount = guestCount;
+    }
+
+
+    public static ReservationData toData(Reservation reservation) {
+        return new ReservationData(
+                reservation.getId(),
+                reservation.getAccommodation().getAddress(),
+                reservation.getGuestCount(),
+                reservation.getCheckInDate());
     }
 }
