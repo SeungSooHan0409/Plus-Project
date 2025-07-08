@@ -17,7 +17,7 @@ public class Review extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int rating;
+    private float rating;
     private String content;
     private String imageUrl;
 
@@ -34,7 +34,7 @@ public class Review extends BaseTimeEntity {
     private Accommodation accommodation;
 
 
-    public Review(int rating, String content, String imageUrl, User user, Reservation reservation) {
+    public Review(float rating, String content, String imageUrl, User user, Reservation reservation) {
         this.rating = rating;
         this.content = content;
         this.imageUrl = imageUrl;
