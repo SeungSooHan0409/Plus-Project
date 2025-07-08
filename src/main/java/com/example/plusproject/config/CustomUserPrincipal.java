@@ -7,12 +7,12 @@ import lombok.Getter;
 public class CustomUserPrincipal {
 
     private final Long id;
-    private final String email;
+    private final String nickname;
     private final UserRole userRole;
 
-    public CustomUserPrincipal(Long id, String email, UserRole userRole){
+    public CustomUserPrincipal(Long id, String nickname, UserRole userRole){
         this.id = id;
-        this.email = email;
+        this.nickname = nickname;
         this.userRole = userRole;
     }
 }

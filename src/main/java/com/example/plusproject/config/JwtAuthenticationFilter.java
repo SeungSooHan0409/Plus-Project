@@ -62,10 +62,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // 사용자 정보 추출
             Long userId = Long.valueOf(claims.getSubject());
-            String email = claims.get("email").toString();
+            String nickname = claims.get("nickname").toString();
             UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
 
-            CustomUserPrincipal customUserPrincipal = new CustomUserPrincipal(userId, email, userRole);
+            CustomUserPrincipal customUserPrincipal = new CustomUserPrincipal(userId, nickname, userRole);
 
             // SecurityContext 에 인증 등록
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

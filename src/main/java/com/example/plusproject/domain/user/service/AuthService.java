@@ -53,7 +53,7 @@ public class AuthService {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
-        String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getRole());
+        String bearerToken = jwtUtil.createToken(user.getId(), user.getNickname(), user.getRole());
 
         return new LoginResponseDto(bearerToken);
     }
