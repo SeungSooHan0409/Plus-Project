@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import com.example.plusproject.domain.common.exception.ServerException;
+import com.example.plusproject.common.exception.ServerException;
 
 import java.security.Key;
 import java.util.Base64;

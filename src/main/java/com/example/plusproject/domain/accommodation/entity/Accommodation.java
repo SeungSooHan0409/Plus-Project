@@ -1,6 +1,6 @@
 package com.example.plusproject.domain.accommodation.entity;
 
-import com.example.plusproject.domain.common.entity.BaseTimeEntity;
+import com.example.plusproject.common.entity.BaseTimeEntity;
 import com.example.plusproject.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;

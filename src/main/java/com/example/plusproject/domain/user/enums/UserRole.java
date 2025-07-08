@@ -1,6 +1,6 @@
 package com.example.plusproject.domain.user.enums;
 
-import com.example.plusproject.domain.common.exception.InvalidRequestException;
+import com.example.plusproject.common.exception.InvalidRequestException;
 
 import java.util.Arrays;
 

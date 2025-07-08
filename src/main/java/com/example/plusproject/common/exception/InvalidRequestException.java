@@ -1,4 +1,4 @@
-package com.example.plusproject.domain.common.exception;
+package com.example.plusproject.common.exception;
 
 public class InvalidRequestException extends RuntimeException {
     public InvalidRequestException(String message) {
