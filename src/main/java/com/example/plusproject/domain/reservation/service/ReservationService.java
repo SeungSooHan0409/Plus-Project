@@ -90,4 +90,29 @@ public class ReservationService {
 
     }
 
+
+    // 예약 인원 변경 메서드
+    public ResponseDto changeGuests(Long id, Long guestCount) {
+
+        // 예약 조회하기
+        Reservation reservation = reservationRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("예약이 없습니다."));
+
+        // 인원 변경하기
+        reservation.setGuestCount(guestCount);
+        reservationRepository.save(reservation);
+
+        // data 생성
+        ReservationData data = new ReservationData(reservation.getId(),
+                reservation.getAccommodation().getAddress(),
+                reservation.getGuestCount(),
+                reservation.getCheckInDate());
+
+        return new ResponseDto(true, "변경 성공!", data, LocalDateTime.now());
+
+
+
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.plusproject.domain.reservation.controller;
 
+import com.example.plusproject.domain.reservation.dto.GuestChangeRequestDto;
 import com.example.plusproject.domain.reservation.dto.PageResponseDto;
 import com.example.plusproject.domain.reservation.dto.RequestDto;
 import com.example.plusproject.domain.reservation.dto.ResponseDto;
@@ -37,6 +38,18 @@ public class ReservationController {
     ) {
 
         return ResponseEntity.ok(reservationService.getReservationPage(page, size));
+
+    }
+
+
+    // 예약 인원 변경 API
+    @PatchMapping("/{id}")
+    public ResponseEntity<ResponseDto> changeReservation(
+            @RequestBody GuestChangeRequestDto requestDto,
+            @PathVariable Long id
+            ) {
+
+        return ResponseEntity.ok(reservationService.changeGuests(id, requestDto.getGuestCount()));
 
     }
 
