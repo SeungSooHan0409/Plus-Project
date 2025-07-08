@@ -13,14 +13,14 @@ public class RequestDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDate checkInDate;
 
-    private final String accommodationName;
+    private final String accommodationAddress;
 
 
 
 
-    public RequestDto(Long guestCount, LocalDate checkInDate, String accommodationName) {
+    public RequestDto(Long guestCount, LocalDate checkInDate, String accommodationAddress) {
         this.guestCount = guestCount;
         this.checkInDate = checkInDate;
-        this.accommodationName =accommodationName;
+        this.accommodationAddress =accommodationAddress;
     }
 }

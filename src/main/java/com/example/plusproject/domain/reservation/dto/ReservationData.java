@@ -9,16 +9,16 @@ import java.time.LocalDate;
 public class ReservationData {
 
     private Long id;
-    private String accommodationName;
+    private String accommodationAddress;
     private Long guestCount;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate checkInDate;
 
 
-    public ReservationData(Long id, String accommodationName, Long guestCount, LocalDate checkInDate) {
+    public ReservationData(Long id, String accommodationAddress, Long guestCount, LocalDate checkInDate) {
         this.id = id;
-        this.accommodationName = accommodationName;
+        this.accommodationAddress = accommodationAddress;
         this.guestCount = guestCount;
         this.checkInDate = checkInDate;
     }
