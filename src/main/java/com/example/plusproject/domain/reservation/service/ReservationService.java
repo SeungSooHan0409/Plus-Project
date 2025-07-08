@@ -5,6 +5,7 @@ import com.example.plusproject.domain.reservation.dto.PageResponseDto;
 import com.example.plusproject.domain.reservation.dto.ReservationData;
 import com.example.plusproject.domain.reservation.dto.ResponseDto;
 import com.example.plusproject.domain.reservation.entity.Reservation;
+import com.example.plusproject.domain.reservation.exception.ReservationNotFound;
 import com.example.plusproject.domain.reservation.repository.ReservationRepository;
 import com.example.plusproject.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -101,7 +102,7 @@ public class ReservationService {
         // 예약 조회하기
         Reservation reservation = reservationRepository
                 .findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("예약이 없습니다."));
+                .orElseThrow(() -> new ReservationNotFound("예약이 없습니다."));
 
         // 인원 변경하기
         reservation.setGuestCount(guestCount);
@@ -125,7 +126,7 @@ public class ReservationService {
         // 삭제할 예약 조회 (예외처리용)
         Reservation reservation = reservationRepository
                 .findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("예약이 없습니다."));
+                .orElseThrow(() -> new ReservationNotFound("예약이 없습니다."));
 
         // 예약 삭제 수행
         reservationRepository.delete(reservation);
