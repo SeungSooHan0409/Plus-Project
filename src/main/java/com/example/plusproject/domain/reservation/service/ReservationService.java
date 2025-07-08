@@ -26,6 +26,8 @@ public class ReservationService {
 
 
     // 숙소예약 메서드
+    // User 병합후 로그인 여부확인 해야함.
+    // User, Accmodation 병합후 더미데이터를 실제데이터로 교체하는 로직 작성해야함.
     public ResponseDto reserveAccommodation(Long guestCount, LocalDate checkInDate, String accommodationAddress) {
 
         // 임의 유저 생성 - User 와 merge 하면 토큰에서 유저정보 추출하기
@@ -73,6 +75,7 @@ public class ReservationService {
 
 
     // 예약 목록 조회 메서드
+    // User 병합후 로그인 여부확인 해야함.
     public PageResponseDto getReservationPage(int page, int size) {
 
         // Pageable 생성
@@ -92,6 +95,7 @@ public class ReservationService {
 
 
     // 예약 인원 변경 메서드
+    // User 병합후 로그인 여부확인 해야함.
     public ResponseDto changeGuests(Long id, Long guestCount) {
 
         // 예약 조회하기
@@ -115,6 +119,7 @@ public class ReservationService {
 
 
     // 예약 삭제 메서드
+    // User 병합후 로그인 여부확인 해야함.
     public ResponseDto deleteReservation(Long id) {
 
         // 삭제할 예약 조회 (예외처리용)
