@@ -111,7 +111,22 @@ public class ReservationService {
 
         return new ResponseDto(true, "변경 성공!", data, LocalDateTime.now());
 
+    }
 
+
+    // 예약 삭제 메서드
+    public ResponseDto deleteReservation(Long id) {
+
+        // 삭제할 예약 조회 (예외처리용)
+        Reservation reservation = reservationRepository
+                .findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("예약이 없습니다."));
+
+        // 예약 삭제 수행
+        reservationRepository.delete(reservation);
+
+        // 응답 반환
+        return new ResponseDto(true, "삭제 성공!", null, LocalDateTime.now());
 
     }
 

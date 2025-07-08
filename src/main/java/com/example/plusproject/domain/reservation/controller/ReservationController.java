@@ -6,7 +6,6 @@ import com.example.plusproject.domain.reservation.dto.RequestDto;
 import com.example.plusproject.domain.reservation.dto.ResponseDto;
 import com.example.plusproject.domain.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,4 +52,14 @@ public class ReservationController {
 
     }
 
+
+    // 예약 취소 API
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDto> cancelReservation(
+            @PathVariable Long id
+    ) {
+
+        return ResponseEntity.ok(reservationService.deleteReservation(id));
+
+    }
 }
