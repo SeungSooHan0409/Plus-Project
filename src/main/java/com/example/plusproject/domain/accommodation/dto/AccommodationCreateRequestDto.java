@@ -28,7 +28,7 @@ public class AccommodationCreateRequestDto {
     private String roomType;
 
     @NotEmpty(message = "숙소 이미지는 한 개 이상 등록해야 합니다.")
-    String image;
+    private String image;
 
     @NotEmpty(message = "제공 서비스는 하나 이상 선택해야 합니다.")
     private String services;
