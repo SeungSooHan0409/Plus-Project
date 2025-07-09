@@ -1,4 +1,4 @@
-package com.example.plusproject.exception;
+package com.example.plusproject.common.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -6,5 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class CustomException extends RuntimeException {
-    private final ErrorCode errorCode;
+
+    private final ErrorType errorType;
+
 }

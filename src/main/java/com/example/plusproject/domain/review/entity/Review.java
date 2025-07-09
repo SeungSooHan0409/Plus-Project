@@ -50,4 +50,5 @@ public class Review extends BaseTimeEntity {
         this.content = content;
         this.imageUrl = imageUrl;
     }
+
 }
