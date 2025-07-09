@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -28,6 +29,7 @@ public class ReservationService {
 
 
     // 숙소예약 메서드
+    @Transactional
     public ApiResponseDto reserveAccommodation(Long guestCount, LocalDate checkInDate, String accommodationAddress, Long userId) {
 
         // 유저 조회
@@ -80,6 +82,7 @@ public class ReservationService {
 
 
     // 예약 인원 변경 메서드
+    @Transactional
     public ApiResponseDto changeGuests(Long id, Long guestCount) {
 
         // 변경하려는 인원이 0 이하일 경우 예외처리
@@ -108,6 +111,7 @@ public class ReservationService {
 
 
     // 예약 삭제 메서드
+    @Transactional
     public ApiResponseDto deleteReservation(Long id) {
 
         // 삭제할 예약 조회 (예외처리용)
