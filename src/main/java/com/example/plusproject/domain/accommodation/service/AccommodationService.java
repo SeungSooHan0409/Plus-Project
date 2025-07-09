@@ -32,7 +32,7 @@ public class AccommodationService {
 //    public AccommodationCreateResponseDto createAccommodationService(AccommodationCreateRequestDto requestDto) {
 //        // 1. 데이터 준비
 //        Long userId = 1L;
-////        Long userId = requestDto.getUserId();
+//        Long userId = requestDto.getUserId();
 //        String accommodationName = requestDto.getAccommodationName();
 //        String address = requestDto.getAddress();
 //        String city = requestDto.getCity();
@@ -70,7 +70,6 @@ public class AccommodationService {
 //                savedAccommodation.getPrice(),
 //                1L
 //        );
-//
 //    }
 
     @Transactional
@@ -99,7 +98,7 @@ public class AccommodationService {
     // id로 엔티티 반환
     public Accommodation findAccommodationById(Long accommodationId) {
         return accommodationRepository.findById(accommodationId)
-                .orElseThrow(()->new CustomException(ErrorCode.NONEXISTENT_USER));
+                .orElseThrow(()->new CustomException(ErrorCode.NONEXISTENT_ACCOMMODATION));
     }
 
     public Page<Accommodation> searchAccommodationsByNameOrAddress(String keyword, Pageable pageable) {
