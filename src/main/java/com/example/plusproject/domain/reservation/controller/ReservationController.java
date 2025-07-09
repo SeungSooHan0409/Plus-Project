@@ -5,6 +5,7 @@ import com.example.plusproject.config.CustomUserPrincipal;
 import com.example.plusproject.domain.reservation.dto.GuestChangeRequestDto;
 import com.example.plusproject.domain.reservation.dto.RequestDto;
 import com.example.plusproject.domain.reservation.service.ReservationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,7 +21,7 @@ public class ReservationController {
     // 숙소 예약 API
     @PostMapping
     public ResponseEntity<ApiResponseDto> createReservation(
-            @RequestBody RequestDto requestDto,
+            @RequestBody @Valid RequestDto requestDto,
             @AuthenticationPrincipal CustomUserPrincipal userPrincipal
             ) {
 
@@ -51,7 +52,7 @@ public class ReservationController {
     // User 병합후 로그인 여부확인 해야함.
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponseDto> changeReservation(
-            @RequestBody GuestChangeRequestDto requestDto,
+            @RequestBody @Valid GuestChangeRequestDto requestDto,
             @PathVariable Long id
             ) {
 
