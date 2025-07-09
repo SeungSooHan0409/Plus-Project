@@ -1,6 +1,7 @@
 package com.example.plusproject.domain.user.controller;
 
 import com.example.plusproject.common.dto.ApiResponseDto;
+import com.example.plusproject.config.CustomUserPrincipal;
 import com.example.plusproject.domain.user.dto.AuthResponseDto;
 import com.example.plusproject.domain.user.dto.AuthUser;
 import com.example.plusproject.domain.user.dto.ChangeRoleDto;
@@ -31,15 +32,15 @@ public class UserController {
     }
 
     // 사용자 조회
-//    @GetMapping("/api/users/me")
-//    public ResponseEntity<ApiResponseDto> getUser(@AuthenticationPrincipal AuthUser authUser){
-//
-//        AuthResponseDto currentUser = userService.getUser(authUser);
-//
-//        ApiResponseDto success = ApiResponseDto.success("현재사용자 조회에 성공했습니다.", currentUser);
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(success);
-//    }
+    @GetMapping("/api/users/me")
+    public ResponseEntity<ApiResponseDto> getUser(@AuthenticationPrincipal CustomUserPrincipal customUserPrincipal){
+
+        AuthResponseDto currentUser = userService.getUser(customUserPrincipal);
+
+        ApiResponseDto success = ApiResponseDto.success("현재사용자 조회에 성공했습니다.", currentUser);
+
+        return ResponseEntity.status(HttpStatus.OK).body(success);
+    }
 
 
     // 사용자 삭제

@@ -1,5 +1,6 @@
 package com.example.plusproject.domain.user.service;
 
+import com.example.plusproject.config.CustomUserPrincipal;
 import com.example.plusproject.domain.user.dto.AuthResponseDto;
 import com.example.plusproject.domain.user.dto.AuthUser;
 import com.example.plusproject.domain.user.dto.ChangeRoleDto;
@@ -41,8 +42,8 @@ public class UserService {
         return new ChangeRoleDto(changeRoleDto.getRole());
     }
 
-    public AuthResponseDto getUser(AuthUser authUser){
-        User user = userRepository.findById(authUser.getId()).orElseThrow(
+    public AuthResponseDto getUser(CustomUserPrincipal customUserPrincipal){
+        User user = userRepository.findById(customUserPrincipal.getId()).orElseThrow(
                 () -> new CustomException(ErrorCode.NONEXISTENT_USER));
 
         // Entity -> dto
