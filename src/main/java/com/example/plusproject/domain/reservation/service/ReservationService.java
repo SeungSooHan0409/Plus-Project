@@ -9,7 +9,6 @@ import com.example.plusproject.domain.reservation.dto.PageResponseDto;
 import com.example.plusproject.domain.reservation.dto.ReservationData;
 import com.example.plusproject.domain.reservation.dto.ResponseDto;
 import com.example.plusproject.domain.reservation.entity.Reservation;
-import com.example.plusproject.domain.reservation.exception.ReservationNotFound;
 import com.example.plusproject.domain.reservation.repository.ReservationRepository;
 import com.example.plusproject.domain.user.entity.User;
 import com.example.plusproject.domain.user.service.UserService;
@@ -62,7 +61,6 @@ public class ReservationService {
 
 
     // 예약 목록 조회 메서드
-    // User 병합후 로그인 여부확인 해야함.
     public PageResponseDto getReservationPage(int page, int size) {
 
         // Pageable 생성
@@ -82,7 +80,6 @@ public class ReservationService {
 
 
     // 예약 인원 변경 메서드
-    // User 병합후 로그인 여부확인 해야함.
     public ResponseDto changeGuests(Long id, Long guestCount) {
 
         // 예약 조회하기
@@ -106,7 +103,6 @@ public class ReservationService {
 
 
     // 예약 삭제 메서드
-    // User 병합후 로그인 여부확인 해야함.
     public ResponseDto deleteReservation(Long id) {
 
         // 삭제할 예약 조회 (예외처리용)
@@ -120,6 +116,12 @@ public class ReservationService {
         // 응답 반환
         return new ResponseDto(true, "삭제 성공!", null, LocalDateTime.now());
 
+    }
+
+    // id 로 Entity 반환
+    public Reservation findReservationById(Long id) {
+        return reservationRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorType.RESERVATION_NOT_FOUND));
     }
 
 }
