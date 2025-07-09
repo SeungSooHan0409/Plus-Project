@@ -1,5 +1,6 @@
 package com.example.plusproject.domain.reservation.controller;
 
+import com.example.plusproject.config.CustomUserPrincipal;
 import com.example.plusproject.domain.reservation.dto.GuestChangeRequestDto;
 import com.example.plusproject.domain.reservation.dto.PageResponseDto;
 import com.example.plusproject.domain.reservation.dto.RequestDto;
@@ -7,6 +8,7 @@ import com.example.plusproject.domain.reservation.dto.ResponseDto;
 import com.example.plusproject.domain.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,11 +23,15 @@ public class ReservationController {
     // User 병합후 로그인 여부확인 해야함.
     @PostMapping
     public ResponseEntity<ResponseDto> createReservation(
-            @RequestBody RequestDto requestDto
+            @RequestBody RequestDto requestDto,
+            @AuthenticationPrincipal CustomUserPrincipal userPrincipal
             ) {
 
+        // 토큰에서 userId 추출
+        Long userId = userPrincipal.getId();
+
         return ResponseEntity.ok(
-                reservationService.reserveAccommodation(requestDto.getGuestCount(), requestDto.getCheckInDate(), requestDto.getAccommodationAddress())
+                reservationService.reserveAccommodation(requestDto.getGuestCount(), requestDto.getCheckInDate(), requestDto.getAccommodationAddress(), userId)
         );
 
     }
