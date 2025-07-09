@@ -15,8 +15,8 @@ public class ApiResponseDto {
     private LocalDateTime timestamp;
 
     // 성공 응답 static 메서드
-    public static ApiResponseDto success(String message,Object date){
-        return new ApiResponseDto(true, message , date, LocalDateTime.now());
+    public static ApiResponseDto success(String message,Object data){
+        return new ApiResponseDto(true, message , data, LocalDateTime.now());
     }
 
     // 실패 응답 static 메서드
