@@ -9,7 +9,6 @@ import lombok.Getter;
 @Getter
 public class AccommodationCreateRequestDto {
 
-//    @NotBlank(message = "userId를 입력해주세요.")
     private Long userId;
 
     @NotBlank(message = "숙소 이름은 필수 입력사항입니다.")
