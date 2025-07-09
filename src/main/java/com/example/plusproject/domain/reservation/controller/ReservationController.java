@@ -35,8 +35,8 @@ public class ReservationController {
     // User 병합후 로그인 여부확인 해야함.
     @GetMapping
     public ResponseEntity<PageResponseDto> getReservations(
-            @RequestParam int page,
-            @RequestParam int size
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
 
         return ResponseEntity.ok(reservationService.getReservationPage(page, size));
