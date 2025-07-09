@@ -82,6 +82,11 @@ public class ReservationService {
     // 예약 인원 변경 메서드
     public ResponseDto changeGuests(Long id, Long guestCount) {
 
+        // 변경하려는 인원이 0 이하일 경우 예외처리
+        if(guestCount <= 0) {
+            throw new CustomException(ErrorType.INVALID_GUESTCOUNT);
+        }
+
         // 예약 조회하기
         Reservation reservation = reservationRepository
                 .findById(id)

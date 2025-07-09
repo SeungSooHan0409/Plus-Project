@@ -8,6 +8,7 @@ public enum ErrorType {
 
     // Reservation
     RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "예약을 찾을 수 없습니다."),
+    INVALID_GUESTCOUNT(HttpStatus.BAD_REQUEST,"1 이상의 숫자만 입력가능 합니다."),
 
     // User
     DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "이미 존재하는 닉네임입니다."),
