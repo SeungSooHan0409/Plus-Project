@@ -19,3 +19,6 @@ spring:
 jwt:
   secret:
     key: ${SECRET_KEY}
+
+
+# (필요하다면) 파일 경로 환경 변수로 추가 필요
