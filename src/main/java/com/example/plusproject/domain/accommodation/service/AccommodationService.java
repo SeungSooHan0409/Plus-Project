@@ -1,5 +1,7 @@
 package com.example.plusproject.domain.accommodation.service;
 
+import com.example.plusproject.common.exception.CustomException;
+import com.example.plusproject.common.exception.ErrorType;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateRequestDto;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateResponseDto;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
@@ -32,7 +34,7 @@ public class AccommodationService {
 //    public AccommodationCreateResponseDto createAccommodationService(AccommodationCreateRequestDto requestDto) {
 //        // 1. 데이터 준비
 //        Long userId = 1L;
-//        Long userId = requestDto.getUserId();
+////        Long userId = requestDto.getUserId();
 //        String accommodationName = requestDto.getAccommodationName();
 //        String address = requestDto.getAddress();
 //        String city = requestDto.getCity();
@@ -45,11 +47,11 @@ public class AccommodationService {
 //
 //        // 2. 예외 처리 (호스트 ID가 아니거나 존재하지 않는 사용자 ID일 경우)
 //        User user = new User();
-//        User foundUser = userRepository.findById(userId).
-//                orElseThrow(() -> new AccommodationCreateException(404, "사용자ID가 존재하지 않습니다."));
-//        if(!foundUser.getRole().equals("Host")) {
-//            throw new AccommodationCreateException(400, "호스트가 아닙니다.");
-//        }
+////        User foundUser = userRepository.findById(userId).
+////                orElseThrow(() -> new AccommodationCreateException(404, "사용자ID가 존재하지 않습니다."));
+////        if(!foundUser.getRole().equals("Host")) {
+////            throw new AccommodationCreateException(400, "호스트가 아닙니다.");
+////        }
 //
 //        // 3. Accommodation 엔티티 생성
 //        Accommodation newAccommodation = new Accommodation(accommodationName, address, city, description, roomType, image, services, price, user);
@@ -70,8 +72,8 @@ public class AccommodationService {
 //                savedAccommodation.getPrice(),
 //                1L
 //        );
+//
 //    }
-
     @Transactional
     public Accommodation createAccommodation(@Valid AccommodationCreateRequestDto dto, Long userId) {
 
@@ -98,10 +100,15 @@ public class AccommodationService {
     // id로 엔티티 반환
     public Accommodation findAccommodationById(Long accommodationId) {
         return accommodationRepository.findById(accommodationId)
-                .orElseThrow(()->new CustomException(ErrorCode.NONEXISTENT_ACCOMMODATION));
+                .orElseThrow(()->new CustomException(ErrorType.NONEXISTENT_ACCOMMODATION));
     }
 
     public Page<Accommodation> searchAccommodationsByNameOrAddress(String keyword, Pageable pageable) {
         return accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
+    }
+
+    // address 로 엔티티 반환
+    public Accommodation findAccommodationByAddress(String address) {
+        return accommodationRepository.findByAddress(address);
     }
 }
