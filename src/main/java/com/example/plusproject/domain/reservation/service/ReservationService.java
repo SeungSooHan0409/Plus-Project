@@ -37,17 +37,22 @@ public class ReservationService {
         Accommodation accommodation = accommodationService.findAccommodationByAddress(accommodationAddress);
 
         // 예약 생성
-        Reservation reservaion = new Reservation(accommodation, user, checkInDate, guestCount);
+        Reservation reservation = new Reservation(accommodation, user, checkInDate, guestCount);
+
+        // 같은 날짜에 같은 숙소 예약불가
+        if(reservationRepository.existsByAccommodationAndCheckInDate(accommodation, checkInDate)) {
+            throw new CustomException(ErrorType.ASSIGNED_DATE);
+        }
 
         // 예약 저장
-        reservationRepository.save(reservaion);
+        reservationRepository.save(reservation);
 
         // data 생성
         ReservationData data = new ReservationData(
-                reservaion.getId(),
-                reservaion.getAccommodation().getAddress(),
-                reservaion.getGuestCount(),
-                reservaion.getCheckInDate());
+                reservation.getId(),
+                reservation.getAccommodation().getAddress(),
+                reservation.getGuestCount(),
+                reservation.getCheckInDate());
 
         // Response 반환
         return ApiResponseDto.success("예약 성공!", data);
