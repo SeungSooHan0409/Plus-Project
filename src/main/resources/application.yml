@@ -16,9 +16,12 @@ spring:
         format_sql: true
         highlight_sql: true
 
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
 jwt:
   secret:
     key: ${SECRET_KEY}
-
-
 # (필요하다면) 파일 경로 환경 변수로 추가 필요
