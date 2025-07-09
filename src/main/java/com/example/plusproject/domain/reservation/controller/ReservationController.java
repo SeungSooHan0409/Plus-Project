@@ -19,8 +19,6 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     // 숙소 예약 API
-    // 토큰에서 정보추출 필요
-    // User 병합후 로그인 여부확인 해야함.
     @PostMapping
     public ResponseEntity<ResponseDto> createReservation(
             @RequestBody RequestDto requestDto,

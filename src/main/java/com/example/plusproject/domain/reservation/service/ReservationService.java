@@ -32,8 +32,6 @@ public class ReservationService {
 
 
     // 숙소예약 메서드
-    // User 병합후 로그인 여부확인 해야함.
-    // User, Accmodation 병합후 더미데이터를 실제데이터로 교체하는 로직 작성해야함.
     public ResponseDto reserveAccommodation(Long guestCount, LocalDate checkInDate, String accommodationAddress, Long userId) {
 
         // 유저 조회
@@ -90,7 +88,7 @@ public class ReservationService {
         // 예약 조회하기
         Reservation reservation = reservationRepository
                 .findById(id)
-                .orElseThrow(() -> new CustomException(ErrorType.RESVERVATION_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorType.RESERVATION_NOT_FOUND));
 
         // 인원 변경하기
         reservation.setGuestCount(guestCount);
@@ -114,7 +112,7 @@ public class ReservationService {
         // 삭제할 예약 조회 (예외처리용)
         Reservation reservation = reservationRepository
                 .findById(id)
-                .orElseThrow(() -> new CustomException(ErrorType.RESVERVATION_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorType.RESERVATION_NOT_FOUND));
 
         // 예약 삭제 수행
         reservationRepository.delete(reservation);
