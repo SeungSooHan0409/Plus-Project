@@ -32,7 +32,6 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/signup","/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/accommodations/**").hasRole("HOST")
                         .anyRequest().authenticated()
                 )
                 .build();

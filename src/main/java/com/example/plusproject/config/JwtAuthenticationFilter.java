@@ -65,11 +65,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String nickname = claims.get("nickname").toString();
             UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
 
-            CustomUserPrinciple customUserPrinciple = new CustomUserPrinciple(userId, nickname, userRole);
+            CustomUserPrincipal customUserPrinciple = new CustomUserPrincipal(userId, nickname, userRole);
 
             // SecurityContext 에 인증 등록
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    customUserPrinciple, null, List.of(new SimpleGrantedAuthority("ROLE_" + userRole.name())));
+                    customUserPrinciple, null, List.of(new SimpleGrantedAuthority(userRole.name())));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             chain.doFilter(request, response);
