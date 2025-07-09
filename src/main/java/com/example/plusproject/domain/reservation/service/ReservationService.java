@@ -1,5 +1,6 @@
 package com.example.plusproject.domain.reservation.service;
 
+import com.example.plusproject.common.dto.ApiResponseDto;
 import com.example.plusproject.common.exception.CustomException;
 import com.example.plusproject.common.exception.ErrorType;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
@@ -31,7 +32,7 @@ public class ReservationService {
 
 
     // 숙소예약 메서드
-    public ResponseDto reserveAccommodation(Long guestCount, LocalDate checkInDate, String accommodationAddress, Long userId) {
+    public ApiResponseDto reserveAccommodation(Long guestCount, LocalDate checkInDate, String accommodationAddress, Long userId) {
 
         // 유저 조회
         User user = userService.findUserById(userId);
@@ -52,16 +53,14 @@ public class ReservationService {
                 reservaion.getGuestCount(),
                 reservaion.getCheckInDate());
 
-        // Response 생성
-        ResponseDto responseDto = new ResponseDto(true, "예약 성공!", data, LocalDateTime.now());
-
-        return responseDto;
+        // Response 반환
+        return ApiResponseDto.success("예약 성공!", data);
 
     }
 
 
     // 예약 목록 조회 메서드
-    public PageResponseDto getReservationPage(int page, int size) {
+    public ApiResponseDto getReservationPage(int page, int size) {
 
         // Pageable 생성
         Pageable pageable = PageRequest.of(page - 1, size);
@@ -72,7 +71,7 @@ public class ReservationService {
         // data 생성
         Page<ReservationData> data = reservations.map(Reservation::toData);
 
-        return new PageResponseDto(true, "조회 성공!", data, LocalDateTime.now());
+        return ApiResponseDto.success("조회 성공!", data);
 
 
 
@@ -80,7 +79,7 @@ public class ReservationService {
 
 
     // 예약 인원 변경 메서드
-    public ResponseDto changeGuests(Long id, Long guestCount) {
+    public ApiResponseDto changeGuests(Long id, Long guestCount) {
 
         // 변경하려는 인원이 0 이하일 경우 예외처리
         if(guestCount <= 0) {
@@ -102,13 +101,13 @@ public class ReservationService {
                 reservation.getGuestCount(),
                 reservation.getCheckInDate());
 
-        return new ResponseDto(true, "변경 성공!", data, LocalDateTime.now());
+        return ApiResponseDto.success("변경 성공!", data);
 
     }
 
 
     // 예약 삭제 메서드
-    public ResponseDto deleteReservation(Long id) {
+    public ApiResponseDto deleteReservation(Long id) {
 
         // 삭제할 예약 조회 (예외처리용)
         Reservation reservation = reservationRepository
@@ -119,7 +118,7 @@ public class ReservationService {
         reservationRepository.delete(reservation);
 
         // 응답 반환
-        return new ResponseDto(true, "삭제 성공!", null, LocalDateTime.now());
+        return ApiResponseDto.success("삭제 성공!", null);
 
     }
 

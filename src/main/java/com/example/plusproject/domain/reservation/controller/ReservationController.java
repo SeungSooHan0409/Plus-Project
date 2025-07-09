@@ -1,5 +1,6 @@
 package com.example.plusproject.domain.reservation.controller;
 
+import com.example.plusproject.common.dto.ApiResponseDto;
 import com.example.plusproject.config.CustomUserPrincipal;
 import com.example.plusproject.domain.reservation.dto.GuestChangeRequestDto;
 import com.example.plusproject.domain.reservation.dto.PageResponseDto;
@@ -20,7 +21,7 @@ public class ReservationController {
 
     // 숙소 예약 API
     @PostMapping
-    public ResponseEntity<ResponseDto> createReservation(
+    public ResponseEntity<ApiResponseDto> createReservation(
             @RequestBody RequestDto requestDto,
             @AuthenticationPrincipal CustomUserPrincipal userPrincipal
             ) {
@@ -38,7 +39,7 @@ public class ReservationController {
     // 숙소 목록 조회 API
     // User 병합후 로그인 여부확인 해야함.
     @GetMapping
-    public ResponseEntity<PageResponseDto> getReservations(
+    public ResponseEntity<ApiResponseDto> getReservations(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
@@ -51,7 +52,7 @@ public class ReservationController {
     // 예약 인원 변경 API
     // User 병합후 로그인 여부확인 해야함.
     @PatchMapping("/{id}")
-    public ResponseEntity<ResponseDto> changeReservation(
+    public ResponseEntity<ApiResponseDto> changeReservation(
             @RequestBody GuestChangeRequestDto requestDto,
             @PathVariable Long id
             ) {
@@ -64,7 +65,7 @@ public class ReservationController {
     // 예약 취소 API
     // User 병합후 로그인 여부확인 해야함.
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto> cancelReservation(
+    public ResponseEntity<ApiResponseDto> cancelReservation(
             @PathVariable Long id
     ) {
 
