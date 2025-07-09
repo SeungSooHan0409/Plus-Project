@@ -4,11 +4,8 @@ import com.example.plusproject.common.dto.ApiResponseDto;
 import com.example.plusproject.common.exception.CustomException;
 import com.example.plusproject.common.exception.ErrorType;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
-import com.example.plusproject.domain.accommodation.repository.AccommodationRepository;
 import com.example.plusproject.domain.accommodation.service.AccommodationService;
-import com.example.plusproject.domain.reservation.dto.PageResponseDto;
 import com.example.plusproject.domain.reservation.dto.ReservationData;
-import com.example.plusproject.domain.reservation.dto.ResponseDto;
 import com.example.plusproject.domain.reservation.entity.Reservation;
 import com.example.plusproject.domain.reservation.repository.ReservationRepository;
 import com.example.plusproject.domain.user.entity.User;
@@ -20,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
