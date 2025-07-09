@@ -7,6 +7,8 @@ import com.example.plusproject.domain.accommodation.repository.AccommodationRepo
 import com.example.plusproject.domain.user.entity.User;
 import com.example.plusproject.domain.user.enums.UserRole;
 import com.example.plusproject.domain.user.service.UserService;
+import com.example.plusproject.exception.CustomException;
+import com.example.plusproject.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -89,5 +91,11 @@ public class AccommodationService {
                 user
         );
         return accommodationRepository.save(accommodation);
+    }
+
+    // id로 엔티티 반환
+    public Accommodation findAccommodationById(Long accommodationId) {
+        return accommodationRepository.findById(accommodationId)
+                .orElseThrow(()->new CustomException(ErrorCode.NONEXISTENT_USER));
     }
 }
