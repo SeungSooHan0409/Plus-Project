@@ -65,5 +65,8 @@ public class User extends BaseTimeEntity {
         this.role = role;
     }
 
+    public void update(UserRole userRole){
+        this.role = userRole;
+    }
     public void delete(){this.deletedAt = LocalDateTime.now();}
 }
