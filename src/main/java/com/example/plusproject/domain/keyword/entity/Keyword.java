@@ -1,6 +1,6 @@
 package com.example.plusproject.domain.keyword.entity;
 
-import com.example.plusproject.domain.common.entity.BaseTimeEntity;
+import com.example.plusproject.common.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

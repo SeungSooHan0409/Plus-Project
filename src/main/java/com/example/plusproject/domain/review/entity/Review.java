@@ -1,7 +1,7 @@
 package com.example.plusproject.domain.review.entity;
 
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
-import com.example.plusproject.domain.common.entity.BaseTimeEntity;
+import com.example.plusproject.common.entity.BaseTimeEntity;
 import com.example.plusproject.domain.reservation.entity.Reservation;
 import com.example.plusproject.domain.user.entity.User;
 import jakarta.persistence.*;
