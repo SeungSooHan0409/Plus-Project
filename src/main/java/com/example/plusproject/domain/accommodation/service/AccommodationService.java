@@ -98,4 +98,9 @@ public class AccommodationService {
         return accommodationRepository.findById(accommodationId)
                 .orElseThrow(()->new CustomException(ErrorCode.NONEXISTENT_USER));
     }
+
+    // address 로 엔티티 반환
+    public Accommodation findAccommodationByAddress(String address) {
+        return accommodationRepository.findByAddress(address);
+    }
 }
