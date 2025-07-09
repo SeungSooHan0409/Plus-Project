@@ -1,6 +1,10 @@
 package com.example.plusproject.domain.reservation.service;
 
+import com.example.plusproject.common.exception.CustomException;
+import com.example.plusproject.common.exception.ErrorType;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
+import com.example.plusproject.domain.accommodation.repository.AccommodationRepository;
+import com.example.plusproject.domain.accommodation.service.AccommodationService;
 import com.example.plusproject.domain.reservation.dto.PageResponseDto;
 import com.example.plusproject.domain.reservation.dto.ReservationData;
 import com.example.plusproject.domain.reservation.dto.ResponseDto;
@@ -8,6 +12,7 @@ import com.example.plusproject.domain.reservation.entity.Reservation;
 import com.example.plusproject.domain.reservation.exception.ReservationNotFound;
 import com.example.plusproject.domain.reservation.repository.ReservationRepository;
 import com.example.plusproject.domain.user.entity.User;
+import com.example.plusproject.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,37 +27,20 @@ import java.time.LocalDateTime;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    // Accommodation 과 merge 하면 주석 해제
-//    private final AccommodationServcie accommodationServcie;
+    private final UserService userService;
+    private final AccommodationService accommodationService;
 
 
     // 숙소예약 메서드
     // User 병합후 로그인 여부확인 해야함.
     // User, Accmodation 병합후 더미데이터를 실제데이터로 교체하는 로직 작성해야함.
-    public ResponseDto reserveAccommodation(Long guestCount, LocalDate checkInDate, String accommodationAddress) {
+    public ResponseDto reserveAccommodation(Long guestCount, LocalDate checkInDate, String accommodationAddress, Long userId) {
 
-        // 임의 유저 생성 - User 와 merge 하면 토큰에서 유저정보 추출하기
-        User user = new User(
-                "name",
-                "nickname",
-                "email",
-                "password",
-                "phoneNumber",
-                "residence",
-                "role"
-        );
+        // 유저 조회
+        User user = userService.findUserById(userId);
 
-        // 임의 숙소 생성 - Accommodation 과 merge 하면 필드에서 숙소주소로 숙소 불러오기
-        Accommodation accommodation = new Accommodation(
-                "address",
-                "city",
-                "description",
-                "roomType",
-                "services",
-                10000,
-                LocalDateTime.now(),
-                user
-        );
+        // 숙소 조회
+        Accommodation accommodation = accommodationService.findAccommodationByAddress(accommodationAddress);
 
         // 예약 생성
         Reservation reservaion = new Reservation(accommodation, user, checkInDate, guestCount);
@@ -102,7 +90,7 @@ public class ReservationService {
         // 예약 조회하기
         Reservation reservation = reservationRepository
                 .findById(id)
-                .orElseThrow(() -> new ReservationNotFound("예약이 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorType.RESVERVATION_NOT_FOUND));
 
         // 인원 변경하기
         reservation.setGuestCount(guestCount);
@@ -126,7 +114,7 @@ public class ReservationService {
         // 삭제할 예약 조회 (예외처리용)
         Reservation reservation = reservationRepository
                 .findById(id)
-                .orElseThrow(() -> new ReservationNotFound("예약이 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorType.RESVERVATION_NOT_FOUND));
 
         // 예약 삭제 수행
         reservationRepository.delete(reservation);
