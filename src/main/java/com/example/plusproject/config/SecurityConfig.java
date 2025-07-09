@@ -1,8 +1,8 @@
 package com.example.plusproject.config;
 
-import com.example.plusproject.domain.user.enums.UserRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/signup","/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/accommodations/**").hasRole("HOST")
                         .anyRequest().authenticated()
                 )
                 .build();

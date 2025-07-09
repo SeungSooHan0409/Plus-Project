@@ -4,12 +4,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class AccommodationCreateRequestDto {
-
-    private Long userId;
 
     @NotBlank(message = "숙소 이름은 필수 입력사항입니다.")
     private String accommodationName;
@@ -35,17 +35,5 @@ public class AccommodationCreateRequestDto {
     @NotNull(message = "숙소 가격은 필수 입력사항입니다.")
     @Positive(message = "숙소 가격은 0보다 커야 합니다.")
     private Double price; // 객체형으로 바꿔야 @NotNull 적용됨
-
-    public AccommodationCreateRequestDto(Long userId, String accommodationName, String address, String city, String description, String roomType, String image, String services, Double price) {
-        this.userId = userId;
-        this.accommodationName = accommodationName;
-        this.address = address;
-        this.city = city;
-        this.description = description;
-        this.roomType = roomType;
-        this.image = image;
-        this.services = services;
-        this.price = price;
-    }
 }
 
