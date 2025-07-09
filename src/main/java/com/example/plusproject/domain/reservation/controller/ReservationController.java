@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/reservation")
+@RequestMapping("/api/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -33,7 +33,7 @@ public class ReservationController {
 
     // 숙소 목록 조회 API
     // User 병합후 로그인 여부확인 해야함.
-    @GetMapping("/{id}")
+    @GetMapping
     public ResponseEntity<PageResponseDto> getReservations(
             @RequestParam int page,
             @RequestParam int size
