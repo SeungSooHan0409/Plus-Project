@@ -11,6 +11,8 @@ import com.example.plusproject.exception.CustomException;
 import com.example.plusproject.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -43,11 +45,11 @@ public class AccommodationService {
 //
 //        // 2. 예외 처리 (호스트 ID가 아니거나 존재하지 않는 사용자 ID일 경우)
 //        User user = new User();
-////        User foundUser = userRepository.findById(userId).
-////                orElseThrow(() -> new AccommodationCreateException(404, "사용자ID가 존재하지 않습니다."));
-////        if(!foundUser.getRole().equals("Host")) {
-////            throw new AccommodationCreateException(400, "호스트가 아닙니다.");
-////        }
+//        User foundUser = userRepository.findById(userId).
+//                orElseThrow(() -> new AccommodationCreateException(404, "사용자ID가 존재하지 않습니다."));
+//        if(!foundUser.getRole().equals("Host")) {
+//            throw new AccommodationCreateException(400, "호스트가 아닙니다.");
+//        }
 //
 //        // 3. Accommodation 엔티티 생성
 //        Accommodation newAccommodation = new Accommodation(accommodationName, address, city, description, roomType, image, services, price, user);
@@ -70,6 +72,7 @@ public class AccommodationService {
 //        );
 //
 //    }
+
     @Transactional
     public Accommodation createAccommodation(@Valid AccommodationCreateRequestDto dto, Long userId) {
 
@@ -97,5 +100,9 @@ public class AccommodationService {
     public Accommodation findAccommodationById(Long accommodationId) {
         return accommodationRepository.findById(accommodationId)
                 .orElseThrow(()->new CustomException(ErrorCode.NONEXISTENT_USER));
+    }
+
+    public Page<Accommodation> searchAccommodationsByNameOrAddress(String keyword, Pageable pageable) {
+        return accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
     }
 }

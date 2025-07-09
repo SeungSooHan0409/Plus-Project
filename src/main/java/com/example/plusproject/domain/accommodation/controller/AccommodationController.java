@@ -6,6 +6,9 @@ import com.example.plusproject.domain.accommodation.dto.AccommodationCreateRespo
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.accommodation.service.AccommodationService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,5 +38,13 @@ public class AccommodationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<Page<Accommodation>> searchAccommodations(
+            @RequestParam(required = false) String keyword,
+            @PageableDefault Pageable pageable
+    ) {
+        Page<Accommodation> accommodationsPage = accommodationService.searchAccommodationsByNameOrAddress(keyword, pageable);
+        return ResponseEntity.ok(accommodationsPage);
+    }
 
 }
