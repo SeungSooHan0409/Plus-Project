@@ -9,6 +9,9 @@ import com.example.plusproject.domain.favorite.repository.FavoriteRepository;
 import com.example.plusproject.domain.user.entity.User;
 import com.example.plusproject.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,6 +40,21 @@ public class FavoriteService {
 
         // 응답 반환
         return ApiResponseDto.success("찜하기 성공!", data);
+
+    }
+
+
+    // 찜목록 조회 메서드
+    public ApiResponseDto getFavorites(int page, int size) {
+
+        // Pageable 객체 생성
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        // 찜목록 가져오기
+        Page<Favorite> favorites = favoriteRepository.findAllByOrderByModifiedAt(pageable);
+
+        // 응답 반환
+        return ApiResponseDto.success("조회 성공!", favorites);
 
     }
 

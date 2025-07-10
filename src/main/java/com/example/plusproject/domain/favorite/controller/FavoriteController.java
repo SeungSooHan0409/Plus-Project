@@ -30,4 +30,16 @@ public class FavoriteController {
 
     }
 
+
+    // 찜목록 조회
+    @GetMapping
+    public ResponseEntity<ApiResponseDto> getFavorites(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+
+        return ResponseEntity.ok(favoriteService.getFavorites(page, size));
+
+    }
+
 }
