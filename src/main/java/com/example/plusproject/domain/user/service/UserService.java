@@ -27,7 +27,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorType.NONEXISTENT_USER));
 
-        if (user.getDeletedAt() != null) {
+        if (user.getDeletedAt() == null) {
             return user;
         }
         throw new CustomException(ErrorType.NONEXISTENT_USER);
