@@ -1,5 +1,7 @@
 package com.example.plusproject.domain.trending.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +20,9 @@ public class TrendingService {
 	private final RedisTemplate<String, String> redisTemplate;
 
 	public List<TrendingResponseDto> getTrending() {
-		Set<String> keywords = redisTemplate.opsForZSet().reverseRange("search", 0, 9);
+		String key = "search:" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:00"));
+
+		Set<String> keywords = redisTemplate.opsForZSet().reverseRange(key, 0, 9);
 
 		List<TrendingResponseDto> trendingList = new ArrayList<>();
 		int rank = 1;
