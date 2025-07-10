@@ -3,6 +3,7 @@ package com.example.plusproject.domain.favorite.entity;
 
 import com.example.plusproject.common.entity.BaseTimeEntity;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
+import com.example.plusproject.domain.favorite.dto.FavoriteData;
 import com.example.plusproject.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -29,4 +30,12 @@ public class Favorite extends BaseTimeEntity {
         this.user = user;
         this.accommodation = accommodation;
     }
+
+
+    public static FavoriteData toData(Favorite favorite) {
+
+        return new FavoriteData(favorite.getAccommodation().getAccommodationName(), favorite.getUser().getNickname());
+
+    }
+
 }
