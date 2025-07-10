@@ -1,6 +1,7 @@
 package com.example.plusproject.domain.favorite.entity;
 
 
+import com.example.plusproject.common.entity.BaseTimeEntity;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table
 @NoArgsConstructor
-public class Favorite {
+public class Favorite extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
