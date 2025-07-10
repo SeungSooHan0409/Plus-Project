@@ -1,7 +1,5 @@
 package com.example.plusproject.domain.accommodation.service;
 
-import com.example.plusproject.common.exception.CustomException;
-import com.example.plusproject.common.exception.ErrorType;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateRequestDto;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateResponseDto;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
@@ -9,8 +7,15 @@ import com.example.plusproject.domain.accommodation.repository.AccommodationRepo
 import com.example.plusproject.domain.user.entity.User;
 import com.example.plusproject.domain.user.enums.UserRole;
 import com.example.plusproject.domain.user.service.UserService;
+import com.example.plusproject.common.exception.ErrorType;
+import com.example.plusproject.exception.CustomException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AccommodationService {
@@ -49,7 +54,11 @@ public class AccommodationService {
     // id로 엔티티 반환
     public Accommodation findAccommodationById(Long accommodationId) {
         return accommodationRepository.findById(accommodationId)
-                .orElseThrow(()->new CustomException(ErrorType.NONEXISTENT_USER));
+                .orElseThrow(()->new CustomException(ErrorType.NONEXISTENT_ACCOMMODATION));
+    }
+
+    public Page<Accommodation> searchAccommodationsByNameOrAddress(String keyword, Pageable pageable) {
+        return accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
     }
 
     // address 로 엔티티 반환

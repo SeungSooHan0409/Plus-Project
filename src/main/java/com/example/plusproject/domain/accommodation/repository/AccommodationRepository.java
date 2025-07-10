@@ -3,6 +3,6 @@ package com.example.plusproject.domain.accommodation.repository;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AccommodationRepository extends JpaRepository<Accommodation, Long> {
+public interface AccommodationRepository extends JpaRepository<Accommodation, Long>, AccommodationRepositoryCustom {
     Accommodation findByAddress(String address);
 }

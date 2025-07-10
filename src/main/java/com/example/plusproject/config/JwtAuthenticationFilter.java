@@ -13,13 +13,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collections;
 
 
 @Slf4j
@@ -37,9 +38,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         HttpServletRequest httpRequest = request;
         HttpServletResponse httpResponse = response;
 
-        String url = httpRequest.getRequestURI();
+        String uri = httpRequest.getRequestURI();
 
-        if (url.startsWith("/api/auth") || url.startsWith("/h2-console")) {
+        if (uri.startsWith("/api/auth")) {
             chain.doFilter(request, response);
             return;
         }
@@ -51,10 +52,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String jwt = jwtUtil.substringToken(bearerJwt);
+        String token = jwtUtil.substringToken(bearerJwt);
 
         try {
-            Claims claims = jwtUtil.extractClaims(jwt);
+            Claims claims = jwtUtil.extractClaims(token);
             if (claims == null) {
                 httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "잘못된 JWT 토큰입니다.");
                 return;
@@ -65,14 +66,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String nickname = claims.get("nickname").toString();
             UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
 
-            CustomUserPrincipal customUserPrinciple = new CustomUserPrincipal(userId, nickname, userRole);
+            CustomUserPrincipal customUserPrincipal = new CustomUserPrincipal(userId, nickname, userRole);
 
             // SecurityContext 에 인증 등록
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    customUserPrinciple, null, List.of(new SimpleGrantedAuthority(userRole.name())));
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    customUserPrincipal,
+                    null,
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole.name()))
+            );
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             chain.doFilter(request, response);
+
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT signature, 유효하지 않은 JWT 서명입니다.", e);
             httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않은 JWT 서명입니다.");

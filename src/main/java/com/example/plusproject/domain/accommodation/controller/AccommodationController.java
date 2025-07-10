@@ -6,6 +6,9 @@ import com.example.plusproject.domain.accommodation.dto.AccommodationCreateReque
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateResponseDto;
 import com.example.plusproject.domain.accommodation.service.AccommodationService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,4 +32,14 @@ public class AccommodationController {
         ApiResponseDto response = ApiResponseDto.success("숙소 등록이 완료되었습니다.", responseDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<Accommodation>> searchAccommodations(
+            @RequestParam(required = false) String keyword,
+            @PageableDefault Pageable pageable
+    ) {
+        Page<Accommodation> accommodationsPage = accommodationService.searchAccommodationsByNameOrAddress(keyword, pageable);
+        return ResponseEntity.ok(accommodationsPage);
+    }
+
 }
