@@ -10,6 +10,7 @@ import com.example.plusproject.domain.user.enums.UserRole;
 import com.example.plusproject.domain.user.service.UserService;
 import com.example.plusproject.common.exception.ErrorType;
 import jakarta.validation.Valid;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -54,9 +55,16 @@ public class AccommodationService {
                 .orElseThrow(()->new CustomException(ErrorType.NONEXISTENT_ACCOMMODATION));
     }
 
-    public Page<Accommodation> searchAccommodationsByNameOrAddress(String keyword, Pageable pageable) {
+    public Page<Accommodation> searchAccommodationsByNameOrAddressV1(String keyword, Pageable pageable) {
         return accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
     }
+
+    @Cacheable(value = "accommodationSearchCache", key = "#keyword")
+    public Page<Accommodation> searchAccommodationsByNameOrAddressV2(String keyword, Pageable pageable) {
+        return accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
+    }
+
+
 
     // address 로 엔티티 반환
     public Accommodation findAccommodationByAddress(String address) {
