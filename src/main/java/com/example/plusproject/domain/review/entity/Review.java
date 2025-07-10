@@ -35,13 +35,12 @@ public class Review extends BaseTimeEntity {
     private Accommodation accommodation;
 
 
-    public Review(double rating, String content, String imageUrl, User user, Reservation reservation, Accommodation accommodation) {
+    public Review(double rating, String content, String imageUrl, User user, Reservation reservation) {
         this.rating = rating;
         this.content = content;
         this.imageUrl = imageUrl;
         this.user = user;
         this.reservation = reservation;
-        this.accommodation = accommodation;
     }
 
     // 응집도 향상을 위한 도메인 로직 구성

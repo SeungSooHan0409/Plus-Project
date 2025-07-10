@@ -2,10 +2,12 @@ package com.example.plusproject.domain.review.service;
 
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.reservation.entity.Reservation;
+import com.example.plusproject.domain.reservation.service.ReservationService;
 import com.example.plusproject.domain.review.dto.*;
 import com.example.plusproject.domain.review.entity.Review;
 import com.example.plusproject.domain.review.repository.ReviewRepository;
 import com.example.plusproject.domain.user.entity.User;
+import com.example.plusproject.domain.user.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ import java.util.Optional;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
+    private final UserService userService;
+    private final ReservationService reservationService;
 
     // 후기 작성 기능
     public ReviewCreateResponseDto createReviewService(ReviewCreateRequestDto reviewCreateRequestDto) {
@@ -34,15 +38,14 @@ public class ReviewService {
         String imageUrl = reviewCreateRequestDto.getImageUrl();
         Long reservationId = reviewCreateRequestDto.getReservationId();
 
-        // 임시 객체, 추후 수정 예정입니다
-        User user = new User();
-        Reservation reservation = new Reservation();
-        Accommodation accommodation = new Accommodation();
+        //
+        Reservation reservation = reservationService.findReservationById(reservationId);
+        User reservationUser = reservation.getUser();
 
         // 검증로직 작성
 
         // 엔티티 만들기
-        Review review = new Review(rating, content, imageUrl, user, reservation, accommodation);
+        Review review = new Review(rating, content, imageUrl, reservationUser, reservation);
 
         // 저장
         Review savedReview = reviewRepository.save(review); // insert
