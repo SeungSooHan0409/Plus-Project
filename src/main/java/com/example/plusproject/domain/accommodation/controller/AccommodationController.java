@@ -1,7 +1,7 @@
 package com.example.plusproject.domain.accommodation.controller;
 
 import com.example.plusproject.common.dto.ApiResponseDto;
-import com.example.plusproject.config.CustomUserPrinciple;
+import com.example.plusproject.config.CustomUserPrincipal;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateRequestDto;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateResponseDto;
 import com.example.plusproject.domain.accommodation.service.AccommodationService;
@@ -23,7 +23,7 @@ public class AccommodationController {
     @PostMapping
     public ResponseEntity<ApiResponseDto> createAccommodation(
             @RequestBody @Valid AccommodationCreateRequestDto dto,
-            @AuthenticationPrincipal CustomUserPrinciple userPrincipal
+            @AuthenticationPrincipal CustomUserPrincipal userPrincipal
     ) {
         AccommodationCreateResponseDto responseDto = accommodationService.createAccommodation(dto, userPrincipal.getId());
         ApiResponseDto response = ApiResponseDto.success("숙소 등록이 완료되었습니다.", responseDto);
