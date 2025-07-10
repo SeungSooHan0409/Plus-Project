@@ -20,7 +20,10 @@ public enum ErrorType {
 
     //Accommodation
     INVALID_USER(HttpStatus.BAD_REQUEST, "호스트가 아닙니다."),
-    NONEXISTENT_ACCOMMODATION(HttpStatus.BAD_REQUEST, "존재하지 않는 숙소입니다.");
+    NONEXISTENT_ACCOMMODATION(HttpStatus.BAD_REQUEST, "존재하지 않는 숙소입니다."),
+
+    // Favorite
+    FAVORITE_NOT_FOUND(HttpStatus.NOT_FOUND, "찜이 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String errorMessage;
