@@ -1,6 +1,5 @@
 package com.example.plusproject.config;
 
-import com.example.plusproject.domain.user.enums.UserRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
