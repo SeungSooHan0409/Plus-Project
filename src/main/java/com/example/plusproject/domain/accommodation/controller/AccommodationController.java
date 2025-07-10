@@ -1,5 +1,6 @@
 package com.example.plusproject.domain.accommodation.controller;
 
+import com.example.plusproject.common.dto.ApiResponseDto;
 import com.example.plusproject.config.CustomUserPrincipal;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateRequestDto;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateResponseDto;
@@ -23,19 +24,14 @@ public class AccommodationController {
         this.accommodationService = accommodationService;
     }
 
-//    @PostMapping // 컨트롤러 : jwt -> userId 추출 // 서비스: role이 host인지 아닌지 검증
-//    public ResponseEntity<AccommodationCreateResponseDto> createAccommodationAPI(
-//            @Valid @RequestBody AccommodationCreateRequestDto requestDto) {
-//        AccommodationCreateResponseDto responseDto = accommodationService.createAccommodationService(requestDto);
-//        return ResponseEntity.ok(responseDto);
-//    }
-
     @PostMapping
-    public ResponseEntity<Accommodation> createAccommodation(
+    public ResponseEntity<ApiResponseDto> createAccommodation(
             @RequestBody @Valid AccommodationCreateRequestDto dto,
-            @AuthenticationPrincipal CustomUserPrincipal userPrincipal) {
-        Accommodation created = accommodationService.createAccommodation(dto, userPrincipal.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+            @AuthenticationPrincipal CustomUserPrincipal userPrincipal
+    ) {
+        AccommodationCreateResponseDto responseDto = accommodationService.createAccommodation(dto, userPrincipal.getId());
+        ApiResponseDto response = ApiResponseDto.success("숙소 등록이 완료되었습니다.", responseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/search")
