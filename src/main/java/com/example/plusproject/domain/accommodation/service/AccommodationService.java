@@ -10,6 +10,8 @@ import com.example.plusproject.domain.user.enums.UserRole;
 import com.example.plusproject.domain.user.service.UserService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -95,7 +97,11 @@ public class AccommodationService {
     // id로 엔티티 반환
     public Accommodation findAccommodationById(Long accommodationId) {
         return accommodationRepository.findById(accommodationId)
-                .orElseThrow(()->new CustomException(ErrorType.NONEXISTENT_USER));
+                .orElseThrow(()->new CustomException(ErrorType.NONEXISTENT_ACCOMMODATION));
+    }
+
+    public Page<Accommodation> searchAccommodationsByNameOrAddress(String keyword, Pageable pageable) {
+        return accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
     }
 
     // address 로 엔티티 반환
