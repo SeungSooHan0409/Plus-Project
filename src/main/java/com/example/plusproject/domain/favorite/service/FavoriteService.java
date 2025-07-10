@@ -1,6 +1,8 @@
 package com.example.plusproject.domain.favorite.service;
 
 import com.example.plusproject.common.dto.ApiResponseDto;
+import com.example.plusproject.common.exception.CustomException;
+import com.example.plusproject.common.exception.ErrorType;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.accommodation.service.AccommodationService;
 import com.example.plusproject.domain.favorite.dto.FavoriteData;
@@ -55,6 +57,21 @@ public class FavoriteService {
 
         // 응답 반환
         return ApiResponseDto.success("조회 성공!", favorites);
+
+    }
+
+
+    // 찜 취소 메서드
+    public ApiResponseDto deleteFavorite(Long id) {
+
+        // 삭제할 찜 조회
+        Favorite favorite = favoriteRepository.findById(id).orElseThrow(() -> new CustomException(ErrorType.FAVORITE_NOT_FOUND));
+
+        // 찜 삭제 수행
+        favoriteRepository.delete(favorite);
+
+        // 응답 반환
+        return ApiResponseDto.success("삭제 성공!", null);
 
     }
 

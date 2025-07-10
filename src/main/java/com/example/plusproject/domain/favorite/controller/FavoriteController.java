@@ -42,4 +42,15 @@ public class FavoriteController {
 
     }
 
+
+    // 찜 취소하기
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponseDto> deleteFavorite(
+            @PathVariable Long id
+    ) {
+
+        return ResponseEntity.ok(favoriteService.deleteFavorite(id));
+
+    }
+
 }
