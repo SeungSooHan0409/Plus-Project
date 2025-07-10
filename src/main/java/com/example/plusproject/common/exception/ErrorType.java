@@ -14,7 +14,7 @@ public enum ErrorType {
     // User
     DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "이미 존재하는 닉네임입니다."),
     NONEXISTENT_USER(HttpStatus.BAD_REQUEST, "존재하지 않는 유저입니다."),
-    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "잘못된 비밀번호입니다."),
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호는 대문자, 소문자, 숫자, 특수문자를 각각 1가 이상 포함한 8자 이상으로 입력해주세요."),
     SAME_ROLE(HttpStatus.BAD_REQUEST, "다른 역할을 입력해주세요."),
     NO_ACCESS(HttpStatus.BAD_REQUEST, "접근 권한이 없습니다"),
 
