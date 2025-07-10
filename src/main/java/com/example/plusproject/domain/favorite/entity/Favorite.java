@@ -24,4 +24,8 @@ public class Favorite {
     @JoinColumn(name = "accommodation_id")
     private Accommodation accommodation;
 
+    public Favorite(User user, Accommodation accommodation) {
+        this.user = user;
+        this.accommodation = accommodation;
+    }
 }
