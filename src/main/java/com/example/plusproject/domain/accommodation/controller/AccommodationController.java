@@ -34,12 +34,21 @@ public class AccommodationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<Page<Accommodation>> searchAccommodations(
+    @GetMapping("/v1/search")
+    public ResponseEntity<Page<Accommodation>> searchAccommodationsV1(
             @RequestParam(required = false) String keyword,
             @PageableDefault Pageable pageable
     ) {
-        Page<Accommodation> accommodationsPage = accommodationService.searchAccommodationsByNameOrAddress(keyword, pageable);
+        Page<Accommodation> accommodationsPage = accommodationService.searchAccommodationsByNameOrAddressV1(keyword, pageable);
+        return ResponseEntity.ok(accommodationsPage);
+    }
+
+    @GetMapping("/v2/search")
+    public ResponseEntity<Page<Accommodation>> searchAccommodationsV2(
+            @RequestParam(required = false) String keyword,
+            @PageableDefault Pageable pageable
+    ) {
+        Page<Accommodation> accommodationsPage = accommodationService.searchAccommodationsByNameOrAddressV2(keyword, pageable);
         return ResponseEntity.ok(accommodationsPage);
     }
 
