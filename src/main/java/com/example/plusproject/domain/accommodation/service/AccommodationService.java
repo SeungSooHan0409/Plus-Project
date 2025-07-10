@@ -1,5 +1,6 @@
 package com.example.plusproject.domain.accommodation.service;
 
+import com.example.plusproject.common.exception.CustomException;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateRequestDto;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateResponseDto;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
@@ -8,14 +9,10 @@ import com.example.plusproject.domain.user.entity.User;
 import com.example.plusproject.domain.user.enums.UserRole;
 import com.example.plusproject.domain.user.service.UserService;
 import com.example.plusproject.common.exception.ErrorType;
-import com.example.plusproject.exception.CustomException;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AccommodationService {

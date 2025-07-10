@@ -4,6 +4,7 @@ import com.example.plusproject.common.dto.ApiResponseDto;
 import com.example.plusproject.config.CustomUserPrincipal;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateRequestDto;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateResponseDto;
+import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.accommodation.service.AccommodationService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
