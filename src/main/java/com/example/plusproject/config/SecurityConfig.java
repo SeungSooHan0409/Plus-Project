@@ -2,6 +2,7 @@ package com.example.plusproject.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -31,7 +32,10 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/signup","/api/auth/login").permitAll()
-                        .requestMatchers("/api/reviews").permitAll()   // 후기 전체 조회 - 로그인 불필요
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/reviews*",
+                                "api/accommodations/search*", "api/accomodations/search*", "api/accomodations/city*",
+                                "api/trending/keywords*", "api/trending/cities*").permitAll()   // 조회 로직 - 로그인 불필요
                         .anyRequest().authenticated()
                 )
                 .build();

@@ -18,6 +18,12 @@ public enum ErrorType {
     SAME_ROLE(HttpStatus.BAD_REQUEST, "다른 역할을 입력해주세요."),
     NO_ACCESS(HttpStatus.BAD_REQUEST, "접근 권한이 없습니다"),
 
+    // Security
+    SC_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "유효하지 않은 JWT 서명입니다."),
+    SC_BAD_REQUEST(HttpStatus.BAD_REQUEST,"지원되지 않는 JWT 토큰입니다."),
+    SC_INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러"),
+
+
     //Accommodation
     INVALID_USER(HttpStatus.BAD_REQUEST, "호스트가 아닙니다."),
     NONEXISTENT_ACCOMMODATION(HttpStatus.BAD_REQUEST, "존재하지 않는 숙소입니다.");
