@@ -55,8 +55,11 @@ public class FavoriteService {
         // 찜목록 가져오기
         Page<Favorite> favorites = favoriteRepository.findAllByOrderByModifiedAt(pageable);
 
+        // data 생성
+        Page<FavoriteData> data = favorites.map(Favorite::toData);
+
         // 응답 반환
-        return ApiResponseDto.success("조회 성공!", favorites);
+        return ApiResponseDto.success("조회 성공!", data);
 
     }
 
