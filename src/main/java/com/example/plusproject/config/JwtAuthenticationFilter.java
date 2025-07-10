@@ -38,7 +38,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String uri = httpRequest.getRequestURI();
 
-        if (uri.startsWith("/api/auth")) {
+        // 로그인과 조회로직은 검증 없이 통과
+        if (uri.startsWith("/api/auth") || uri.startsWith("/api/trending/keywords") || uri.startsWith("api/trending/cities")||
+                uri.startsWith("/api/accommodations/search")|| uri.startsWith("/api/accommodations/city")
+
+                ) {
             chain.doFilter(request, response);
             return;
         }

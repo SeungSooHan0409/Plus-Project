@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/signup","/api/auth/login").permitAll()
+                        .requestMatchers("/api/reviews").permitAll()   // 후기 전체 조회 - 로그인 불필요
                         .anyRequest().authenticated()
                 )
                 .build();
