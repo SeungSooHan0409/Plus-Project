@@ -6,16 +6,18 @@ import com.example.plusproject.domain.accommodation.dto.AccommodationCreateReque
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateResponseDto;
 import com.example.plusproject.domain.accommodation.dto.AccommodationUpdateRequestDto;
 import com.example.plusproject.domain.accommodation.dto.AccommodationUpdateResponseDto;
-import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.accommodation.service.AccommodationService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/accommodations")
@@ -37,21 +39,32 @@ public class AccommodationController {
     }
 
     @GetMapping("/v1/search")
-    public ResponseEntity<Page<Accommodation>> searchAccommodationsV1(
+    public ResponseEntity<Page<AccommodationCreateResponseDto>> searchAccommodationsV1(
             @RequestParam(required = false) String keyword,
             @PageableDefault Pageable pageable
     ) {
-        Page<Accommodation> accommodationsPage = accommodationService.searchAccommodationsByNameOrAddressV1(keyword, pageable);
+        Page<AccommodationCreateResponseDto> accommodationsPage =
+                accommodationService.searchAccommodationsByNameOrAddressV1(keyword, pageable);
         return ResponseEntity.ok(accommodationsPage);
     }
 
-    @GetMapping("/v2/search")
-    public ResponseEntity<Page<Accommodation>> searchAccommodationsV2(
+//    @GetMapping("/v2/search")
+//    public ResponseEntity<Page<Accommodation>> searchAccommodationsV2(
+//            @RequestParam(required = false) String keyword,
+//            @PageableDefault Pageable pageable
+//    ) {
+//        Page<Accommodation> accommodationsPage = accommodationService.searchAccommodationsByNameOrAddressV2(keyword, pageable);
+//        return ResponseEntity.ok(accommodationsPage);
+//    }
+
+    @GetMapping("/v3/search")
+    public ResponseEntity<Page<AccommodationCreateResponseDto>> searchAccommodationsV3(
             @RequestParam(required = false) String keyword,
             @PageableDefault Pageable pageable
     ) {
-        Page<Accommodation> accommodationsPage = accommodationService.searchAccommodationsByNameOrAddressV2(keyword, pageable);
-        return ResponseEntity.ok(accommodationsPage);
+        List<AccommodationCreateResponseDto> list = accommodationService.searchAccommodationsByNameOrAddressV3(keyword, pageable);
+        long total = accommodationService.countAccommodations(keyword);
+        return ResponseEntity.ok(new PageImpl<>(list, pageable, total));
     }
 
     @PatchMapping("/{id}")

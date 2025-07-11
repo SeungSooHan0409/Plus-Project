@@ -17,6 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AccommodationService {
     private final AccommodationRepository accommodationRepository;
@@ -110,17 +113,32 @@ public class AccommodationService {
                 .orElseThrow(()->new CustomException(ErrorType.NONEXISTENT_ACCOMMODATION));
     }
 
-    public Page<Accommodation> searchAccommodationsByNameOrAddressV1(String keyword, Pageable pageable) {
-        return accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
+    public Page<AccommodationCreateResponseDto> searchAccommodationsByNameOrAddressV1(String keyword, Pageable pageable) {
+        Page<Accommodation> accommodations = accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
+        return accommodations.map(AccommodationCreateResponseDto::from);
     }
 
-    @Cacheable(value = "accommodationSearchCache", key = "#keyword")
-    public Page<Accommodation> searchAccommodationsByNameOrAddressV2(String keyword, Pageable pageable) {
-        return accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
+//    @Cacheable(value = "accommodationSearchCache", key = "#keyword")
+//    public Page<Accommodation> searchAccommodationsByNameOrAddressV2(String keyword, Pageable pageable) {
+//        return accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
+//    }
+
+    @Cacheable(value = "accommodationSearchCacheV3", key = "#keyword")
+    public List<AccommodationCreateResponseDto> searchAccommodationsByNameOrAddressV3(String keyword, Pageable pageable) {
+        Page<Accommodation> result = accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
+        return result.stream()
+                .map(AccommodationCreateResponseDto::from)
+//                .toList();
+                .collect(Collectors.toList());
     }
 
     // address 로 엔티티 반환
     public Accommodation findAccommodationByAddress(String address) {
         return accommodationRepository.findByAddress(address);
     }
+
+    public long countAccommodations(String keyword) {
+        return accommodationRepository.countAccommodationsByNameOrAddress(keyword);
+    }
+
 }

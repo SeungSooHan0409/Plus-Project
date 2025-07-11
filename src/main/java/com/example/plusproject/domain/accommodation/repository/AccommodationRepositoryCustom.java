@@ -6,4 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface AccommodationRepositoryCustom {
     Page<Accommodation> searchAccommodationsByNameOrAddress(String keyword, Pageable pageable);
+
+    long countAccommodationsByNameOrAddress(String keyword);
 }

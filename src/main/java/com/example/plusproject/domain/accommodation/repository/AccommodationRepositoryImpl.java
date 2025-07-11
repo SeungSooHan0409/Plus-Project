@@ -47,4 +47,21 @@ public class AccommodationRepositoryImpl implements AccommodationRepositoryCusto
 
         return new PageImpl<>(content, pageable, total);
     }
+
+    @Override
+    public long countAccommodationsByNameOrAddress(String keyword) {
+
+        QAccommodation accommodation = QAccommodation.accommodation;
+
+        BooleanExpression condition = null;
+        if (keyword != null && !keyword.isBlank()) {
+            condition = accommodation.accommodationName.containsIgnoreCase(keyword)
+                    .or(accommodation.address.containsIgnoreCase(keyword));
+        }
+        return queryFactory
+                .select(accommodation.count())
+                .from(accommodation)
+                .where(condition)
+                .fetchOne();
+    }
 }
