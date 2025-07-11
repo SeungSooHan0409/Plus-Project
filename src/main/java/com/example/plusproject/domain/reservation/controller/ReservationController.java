@@ -29,7 +29,7 @@ public class ReservationController {
         Long userId = userPrincipal.getId();
 
         return ResponseEntity.ok(
-                reservationService.reserveAccommodation(requestDto.getGuestCount(), requestDto.getCheckInDate(), requestDto.getAccommodationAddress(), userId)
+                reservationService.reserveAccommodation(requestDto.getGuestCount(), requestDto.getCheckInDate(),requestDto.getCheckOutDate() ,requestDto.getAccommodationAddress(), userId)
         );
 
     }
