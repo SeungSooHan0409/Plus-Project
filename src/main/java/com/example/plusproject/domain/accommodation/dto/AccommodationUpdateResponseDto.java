@@ -1,15 +1,14 @@
 package com.example.plusproject.domain.accommodation.dto;
 
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-// 생성자 dto를 통해서 불러오기 위해 필요
-@NoArgsConstructor
 @AllArgsConstructor
-public class AccommodationCreateResponseDto {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AccommodationUpdateResponseDto {
 
     private Long id;
     private String accommodationName;
@@ -22,8 +21,8 @@ public class AccommodationCreateResponseDto {
     private Double price;
     private Long hostId;
 
-    public static AccommodationCreateResponseDto from(Accommodation entity) {
-        return new AccommodationCreateResponseDto(
+    public static AccommodationUpdateResponseDto from(Accommodation entity) {
+        return new AccommodationUpdateResponseDto(
                 entity.getId(),
                 entity.getAccommodationName(),
                 entity.getAddress(),
@@ -33,7 +32,9 @@ public class AccommodationCreateResponseDto {
                 entity.getImage(),
                 entity.getServices(),
                 entity.getPrice(),
-                entity.getUser().getId() // hostId
+                entity.getUser().getId()
         );
     }
 }
+
+// @JsonInclude(JsonInclude.Include.NON_NULL) : JSON 직렬화 시 null 값은 제외됨 (불필요한 필드 제거)

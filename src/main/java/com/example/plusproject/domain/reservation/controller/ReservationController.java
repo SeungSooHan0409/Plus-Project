@@ -36,7 +36,6 @@ public class ReservationController {
 
 
     // 숙소 목록 조회 API
-    // User 병합후 로그인 여부확인 해야함.
     @GetMapping
     public ResponseEntity<ApiResponseDto> getReservations(
             @RequestParam(defaultValue = "1") int page,
@@ -49,7 +48,6 @@ public class ReservationController {
 
 
     // 예약 인원 변경 API
-    // User 병합후 로그인 여부확인 해야함.
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponseDto> changeReservation(
             @RequestBody @Valid GuestChangeRequestDto requestDto,
