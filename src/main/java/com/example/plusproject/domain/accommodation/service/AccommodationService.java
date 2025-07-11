@@ -124,7 +124,7 @@ public class AccommodationService {
 //        return accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
 //    }
 
-    @Cacheable(value = "accommodationSearchCacheV3", key = "#keyword + '_' + #pageable.pageNumber + '_' + #pageable.pageSize + '_' + #pageable.sort")
+    @Cacheable(value = "accommodationSearchCacheV3", key = "#keyword + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
     public List<AccommodationCreateResponseDto> searchAccommodationsByNameOrAddressV3(String keyword, Pageable pageable) {
         Page<Accommodation> result = accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
         return result.stream()
