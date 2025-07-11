@@ -3,10 +3,14 @@ package com.example.plusproject.domain.accommodation.dto;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+// 생성자 dto를 통해서 불러오기 위해 필요
+@NoArgsConstructor
 @AllArgsConstructor
 public class AccommodationCreateResponseDto {
+
     private Long id;
     private String accommodationName;
     private String address;
