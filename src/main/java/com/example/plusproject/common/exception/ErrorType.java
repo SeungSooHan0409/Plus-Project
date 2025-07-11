@@ -26,7 +26,8 @@ public enum ErrorType {
 
     //Accommodation
     INVALID_USER(HttpStatus.BAD_REQUEST, "호스트가 아닙니다."),
-    NO_AUTHORITY(HttpStatus.BAD_REQUEST, "숙소 정보를 수정할 권한이 없습니다."),
+    NO_AUTHORITY_FOR_REVISION(HttpStatus.BAD_REQUEST, "숙소 정보 수정 권한이 없습니다."),
+    NO_AUTHORITY_FOR_DELETION(HttpStatus.BAD_REQUEST, "숙소 정보 삭제 권한이 없습니다."),
     NONEXISTENT_ACCOMMODATION(HttpStatus.BAD_REQUEST, "존재하지 않는 숙소입니다."),
 
     // Favorite
