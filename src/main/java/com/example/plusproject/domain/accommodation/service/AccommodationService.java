@@ -141,4 +141,5 @@ public class AccommodationService {
     public long countAccommodations(String keyword) {
         return accommodationRepository.countAccommodationsByNameOrAddress(keyword);
     }
+
 }
