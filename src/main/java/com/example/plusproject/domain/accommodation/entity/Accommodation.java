@@ -1,13 +1,13 @@
 package com.example.plusproject.domain.accommodation.entity;
 
 import com.example.plusproject.common.entity.BaseTimeEntity;
+import com.example.plusproject.common.exception.CustomException;
+import com.example.plusproject.common.exception.ErrorType;
 import com.example.plusproject.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -43,5 +43,40 @@ public class Accommodation extends BaseTimeEntity {
         this.services = services;
         this.price = price;
         this.user = user;
+    }
+
+    public void changeAccommodationName(String accommodationName) {
+        this.accommodationName = accommodationName;
+    }
+
+    public void changeAddress(String address) {
+        this.address = address;
+    }
+
+    public void changeCity(String city) {
+        this.city = city;
+    }
+
+    public void changeDescription(String description) {
+        this.description = description;
+    }
+
+    public void changeRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
+    public void changeImage(String image) {
+        this.image = image;
+    }
+
+    public void changeServices(String services) {
+        this.services = services;
+    }
+
+    public void changePrice(double price) {
+        if(price <= 0) {
+            throw new CustomException(ErrorType.INVALID_PRICE);
+        }
+        this.price = price;
     }
 }

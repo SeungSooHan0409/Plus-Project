@@ -4,6 +4,8 @@ import com.example.plusproject.common.dto.ApiResponseDto;
 import com.example.plusproject.config.CustomUserPrincipal;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateRequestDto;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateResponseDto;
+import com.example.plusproject.domain.accommodation.dto.AccommodationUpdateRequestDto;
+import com.example.plusproject.domain.accommodation.dto.AccommodationUpdateResponseDto;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.accommodation.service.AccommodationService;
 import jakarta.validation.Valid;
@@ -34,13 +36,32 @@ public class AccommodationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<Page<Accommodation>> searchAccommodations(
+    @GetMapping("/v1/search")
+    public ResponseEntity<Page<Accommodation>> searchAccommodationsV1(
             @RequestParam(required = false) String keyword,
             @PageableDefault Pageable pageable
     ) {
-        Page<Accommodation> accommodationsPage = accommodationService.searchAccommodationsByNameOrAddress(keyword, pageable);
+        Page<Accommodation> accommodationsPage = accommodationService.searchAccommodationsByNameOrAddressV1(keyword, pageable);
         return ResponseEntity.ok(accommodationsPage);
     }
 
+    @GetMapping("/v2/search")
+    public ResponseEntity<Page<Accommodation>> searchAccommodationsV2(
+            @RequestParam(required = false) String keyword,
+            @PageableDefault Pageable pageable
+    ) {
+        Page<Accommodation> accommodationsPage = accommodationService.searchAccommodationsByNameOrAddressV2(keyword, pageable);
+        return ResponseEntity.ok(accommodationsPage);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponseDto> updateAccommodation(
+            @PathVariable Long id,
+            @RequestBody AccommodationUpdateRequestDto dto,
+            @AuthenticationPrincipal CustomUserPrincipal userPrincipal
+    ) {
+        AccommodationUpdateResponseDto responseDto = accommodationService.updateAccommodation(id, dto, userPrincipal.getId());
+        ApiResponseDto response = ApiResponseDto.success("숙소 상세 정보 수정이 완료되었습니다.", responseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
