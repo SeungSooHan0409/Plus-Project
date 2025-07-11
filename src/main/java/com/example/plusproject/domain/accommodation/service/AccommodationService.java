@@ -51,13 +51,12 @@ public class AccommodationService {
     }
 
     public AccommodationUpdateResponseDto updateAccommodation(Long id, AccommodationUpdateRequestDto dto, Long userId) {
-        User user = userService.findUserById(userId);
-
-        if(!user.getRole().equals(UserRole.HOST)) {
-            throw new CustomException(ErrorType.INVALID_USER);
-        }
 
         Accommodation accommodation = accommodationRepository.findById(id).orElseThrow(()->new CustomException(ErrorType.NONEXISTENT_ACCOMMODATION));
+
+        if(!userId.equals(accommodation.getUser().getId())) {
+            throw new CustomException(ErrorType.NO_AUTHORITY);
+        }
 
         String newAccommodationName = dto.getAccommodationName();
         String newAddress = dto.getAddress();
@@ -68,35 +67,35 @@ public class AccommodationService {
         String newServices = dto.getServices();
         Double newPrice = dto.getPrice();
 
-        if(newAccommodationName != null && !newAccommodationName.isBlank()) {
+        if(dto.hasValidAccommodationName()) {
             accommodation.changeAccommodationName(newAccommodationName);
         }
 
-        if(newAddress != null && !newAddress.isBlank()) {
+        if(dto.hasValidAddress()) {
             accommodation.changeAddress(newAddress);
         }
 
-        if(newCity != null && !newCity.isBlank()) {
+        if(dto.hasValidCity()) {
             accommodation.changeCity(newCity);
         }
 
-        if(newDescription != null && !newDescription.isBlank()) {
+        if(dto.hasValidDescription()) {
             accommodation.changeDescription(newDescription);
         }
 
-        if(newRoomType != null && !newRoomType.isBlank()) {
+        if(dto.hasValidRoomType()) {
             accommodation.changeRoomType(newRoomType);
         }
 
-        if(newImage != null && !newImage.isBlank()) {
+        if(dto.hasValidImage()) {
             accommodation.changeImage(newImage);
         }
 
-        if(newServices != null && !newServices.isBlank()) {
+        if(dto.hasValidServices()) {
             accommodation.changeServices(newServices);
         }
 
-        if(newPrice != null) {
+        if(dto.hasValidPrice()) {
             accommodation.changePrice(newPrice);
         }
 
@@ -119,8 +118,6 @@ public class AccommodationService {
     public Page<Accommodation> searchAccommodationsByNameOrAddressV2(String keyword, Pageable pageable) {
         return accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
     }
-
-
 
     // address 로 엔티티 반환
     public Accommodation findAccommodationByAddress(String address) {
