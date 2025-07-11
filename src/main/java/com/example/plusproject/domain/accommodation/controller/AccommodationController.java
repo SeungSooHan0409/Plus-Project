@@ -6,7 +6,6 @@ import com.example.plusproject.domain.accommodation.dto.AccommodationCreateReque
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateResponseDto;
 import com.example.plusproject.domain.accommodation.dto.AccommodationUpdateRequestDto;
 import com.example.plusproject.domain.accommodation.dto.AccommodationUpdateResponseDto;
-import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.accommodation.service.AccommodationService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
