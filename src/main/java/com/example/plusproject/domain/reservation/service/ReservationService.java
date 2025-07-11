@@ -141,4 +141,10 @@ public class ReservationService {
                 .orElseThrow(() -> new CustomException(ErrorType.RESERVATION_NOT_FOUND));
     }
 
+    // User, reservationId로 Entity 반환
+    public Reservation findReservationByUserAndId(User user, Long reservationId) {
+        return reservationRepository.findByUserAndId(user, reservationId)
+                .orElseThrow(() -> new CustomException(ErrorType.RESERVATION_NOT_FOUND_OR_FORBIDDEN));
+    }
+
 }

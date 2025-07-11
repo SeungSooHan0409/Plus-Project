@@ -1,12 +1,10 @@
 package com.example.plusproject.domain.accommodation.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccommodationUpdateRequestDto {
 
     private String accommodationName;
@@ -17,6 +15,37 @@ public class AccommodationUpdateRequestDto {
     private String image;
     private String services;
     private Double price;
-}
 
-// @JsonInclude(JsonInclude.Include.NON_NULL) : JSON 직렬화 시 null 값은 제외됨 (불필요한 필드 제거)
+    // 유효성 검증 메소드
+    public boolean hasValidAccommodationName() {
+        return accommodationName != null && !accommodationName.isBlank();
+    }
+
+    public boolean hasValidAddress() {
+        return address != null && !address.isBlank();
+    }
+
+    public boolean hasValidCity() {
+        return city != null && !city.isBlank();
+    }
+
+    public boolean hasValidDescription() {
+        return description != null && !description.isBlank();
+    }
+
+    public boolean hasValidRoomType() {
+        return roomType != null && !roomType.isBlank();
+    }
+
+    public boolean hasValidImage() {
+        return image != null && !image.isBlank();
+    }
+
+    public boolean hasValidServices() {
+        return services != null && !services.isBlank();
+    }
+
+    public boolean hasValidPrice() {
+        return price != null && price > 0;
+    }
+}

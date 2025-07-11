@@ -10,6 +10,7 @@ public enum ErrorType {
     RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "예약을 찾을 수 없습니다."),
     INVALID_GUESTCOUNT(HttpStatus.BAD_REQUEST,"1 이상의 숫자만 입력가능 합니다."),
     ASSIGNED_DATE(HttpStatus.BAD_REQUEST, "해당 날짜에 이미 예약이 존재합니다."),
+    RESERVATION_NOT_FOUND_OR_FORBIDDEN(HttpStatus.NOT_FOUND, "해당 예약이 존재하지 않거나 접근 권한이 없습니다."),
     INVALID_DATE(HttpStatus.BAD_REQUEST,"체크인 날짜는 체크 아웃 날짜 이후 일 수 없습니다."),
 
     // User
@@ -27,8 +28,15 @@ public enum ErrorType {
 
     //Accommodation
     INVALID_USER(HttpStatus.BAD_REQUEST, "호스트가 아닙니다."),
-    INVALID_PRICE(HttpStatus.BAD_REQUEST, "숙소 가격은 0보다 커야 합니다."),
+    NO_AUTHORITY_FOR_REVISION(HttpStatus.BAD_REQUEST, "숙소 정보 수정 권한이 없습니다."),
+    NO_AUTHORITY_FOR_DELETION(HttpStatus.BAD_REQUEST, "숙소 정보 삭제 권한이 없습니다."),
     NONEXISTENT_ACCOMMODATION(HttpStatus.BAD_REQUEST, "존재하지 않는 숙소입니다."),
+
+    // Review
+    REVIEW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 후기가 작성된 예약입니다."),
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 후기입니다."),
+    REVIEW_NOT_FOUND_OR_FORBIDDEN(HttpStatus.NOT_FOUND, "해당 후기가 존재하지 않거나 접근 권한이 없습니다."),
+    INVALID_PRICE(HttpStatus.BAD_REQUEST, "숙소 가격은 0보다 커야 합니다."),
 
     // Favorite
     FAVORITE_NOT_FOUND(HttpStatus.NOT_FOUND, "찜이 존재하지 않습니다.");
