@@ -13,7 +13,7 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         // 캐시 공간 생성
-        return new ConcurrentMapCacheManager("accommodationSearchCache");
+        return new ConcurrentMapCacheManager("accommodationSearchCache", "favorites");
     }
 
 }
