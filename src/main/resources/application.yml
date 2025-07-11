@@ -1,8 +1,6 @@
 spring:
-
-  # Redis 있어도 Inmemory cache 가 사용되는 옵션
   cache:
-    type: simple
+    type: redis
 
   application:
     name: Plus-Project
