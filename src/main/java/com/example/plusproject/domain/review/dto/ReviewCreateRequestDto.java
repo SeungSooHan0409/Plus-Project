@@ -16,7 +16,7 @@ public class ReviewCreateRequestDto {
     @NotNull
     @Min(0)
     @Max(5)
-    private Double rating;
+    private double rating;
 
     @NotBlank
     private String content;

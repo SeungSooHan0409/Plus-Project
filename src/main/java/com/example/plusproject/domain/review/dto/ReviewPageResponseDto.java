@@ -2,14 +2,13 @@ package com.example.plusproject.domain.review.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class ReviewPageResponseDto<T> {
 
-    private Long userId;
-    private String nickname;
-
+    private List<T> reviews;
+    private PageDto page;
 }

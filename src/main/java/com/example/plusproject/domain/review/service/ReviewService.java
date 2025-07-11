@@ -1,5 +1,7 @@
 package com.example.plusproject.domain.review.service;
 
+import com.example.plusproject.common.exception.CustomException;
+import com.example.plusproject.common.exception.ErrorType;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.reservation.entity.Reservation;
 import com.example.plusproject.domain.reservation.service.ReservationService;
@@ -8,44 +10,54 @@ import com.example.plusproject.domain.review.entity.Review;
 import com.example.plusproject.domain.review.repository.ReviewRepository;
 import com.example.plusproject.domain.user.entity.User;
 import com.example.plusproject.domain.user.service.UserService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
-// 지저분한거 신경쓰지마세요
-// 돌아가는지가 중요해요
-// 돌아간다면, 예외 상황도 잘 처리하고 있는지가 중요해요
-// 이 코드를 나중에 수정해야해서 읽거나 파악할떄 어려운가? -> 코드를 조금 깔끔하게 적어야겠네
-// 코드를 깔끔하게 적는 방법에대해 공부
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final UserService userService;
     private final ReservationService reservationService;
+    private final UserService userService;
 
-    // 후기 작성 기능
-    public ReviewCreateResponseDto createReviewService(ReviewCreateRequestDto reviewCreateRequestDto) {
+    /**
+     * 후기 작성 기능
+     *
+     * @param reviewCreateRequestDto
+     * @return
+     */
+    @Transactional
+    public ReviewCreateResponseDto createReviewService(ReviewCreateRequestDto reviewCreateRequestDto, Long userPrincipalId) {
 
         // 데이터 준비
-        Double rating = reviewCreateRequestDto.getRating();
+        double rating = reviewCreateRequestDto.getRating();
         String content = reviewCreateRequestDto.getContent();
         String imageUrl = reviewCreateRequestDto.getImageUrl();
-        Long reservationId = reviewCreateRequestDto.getReservationId();
+        Long requestDtoReservationId = reviewCreateRequestDto.getReservationId();
 
-        //
-        Reservation reservation = reservationService.findReservationById(reservationId);
-        User reservationUser = reservation.getUser();
+        // 유저 ID로 예약 가져오기
+        User user = userService.findUserById(userPrincipalId);
+        Reservation reservation = reservationService.findReservationByUserAndId(user, requestDtoReservationId);
+        Long reservationId = reservation.getId();
+        Accommodation reservationAccommodation = reservation.getAccommodation();
 
         // 검증로직 작성
+        boolean exists = reviewRepository.existsByReservationId(reservationId);
+        if (exists) {
+            throw new CustomException(ErrorType.REVIEW_ALREADY_EXISTS);
+        }
 
         // 엔티티 만들기
-        Review review = new Review(rating, content, imageUrl, reservationUser, reservation);
+        Review review = new Review(rating, content, imageUrl, user, reservation, reservationAccommodation);
 
         // 저장
         Review savedReview = reviewRepository.save(review); // insert
@@ -54,90 +66,204 @@ public class ReviewService {
         Long savedReviewId = savedReview.getId();
         User savedReviewUser = savedReview.getUser();
         String savedReviewUserNickname = savedReviewUser.getNickname();
+        double savedReviewRating = savedReview.getRating();
         String savedReviewContent = savedReview.getContent();
         LocalDateTime savedReviewCreatedAt = savedReview.getCreatedAt();
 
-        ReviewCreateResponseDto responseDto = new ReviewCreateResponseDto(savedReviewId, savedReviewUserNickname, savedReviewContent, savedReviewCreatedAt);
+        ReviewCreateResponseDto responseDto = new ReviewCreateResponseDto(savedReviewId, savedReviewUserNickname, savedReviewRating, savedReviewContent, savedReviewCreatedAt);
+
         // responseDto 반환
         return responseDto;
     }
 
-    // 후기 단건 조회 기능
+    /**
+     * 후기 단건 조회 기능
+     *
+     * @param reviewId
+     * @return
+     */
     public ReviewDetailResponseDto getReviewDetailService(Long reviewId) {
 
         // 데이터 준비
-        Optional<Review> reviewOptional = reviewRepository.findById(reviewId);
-
-        // 검증 로직
-        if(reviewOptional.isPresent()) {
-            Review review = reviewOptional.get();
-
-            User reviewUser = review.getUser();
-            Long reviewUserId = reviewUser.getId();
-            String reviewUserNickname = reviewUser.getNickname();
-            Accommodation reviewAccommodation = review.getAccommodation();
-            Long reviewAccommodationId = reviewAccommodation.getId();
-            String reviewAccommodationAccommodationName = reviewAccommodation.getAccommodationName();
-            Double reviewRating = review.getRating();
-            String reviewContent = review.getContent();
-            String reviewImageUrl = review.getImageUrl();
-            LocalDateTime reviewCreatedAt = review.getCreatedAt();
-
-            UserDto userDto = new UserDto(reviewUserId, reviewUserNickname);
-            AccommodationDto accommodationDto = new AccommodationDto(reviewAccommodationId, reviewAccommodationAccommodationName);
-
-            ReviewDetailResponseDto responseDto = new ReviewDetailResponseDto(reviewId, userDto, accommodationDto, reviewRating, reviewContent, reviewImageUrl, reviewCreatedAt);
-            return responseDto;
-
-            // TODO ReviewNotFoundException로 교체할것
-        } throw new IllegalArgumentException("존재하지 않는 후기입니다.");
-    }
-
-    // 후기 전체 조회 기능
-    public void getReviewListService() {
-
-        // 데이터 준비
-        List<Review> reviewList = reviewRepository.findAll();
-
-    }
-
-    // 후기 수정 기능
-    @Transactional
-    public void updateReviewService(ReviewUpdateRequestDto reviewUpdateRequestDto, Long reviewId) {
-        // Transaction transaction = transactionManager.getTransaction()
-        // transaction.start();
-
-        // 데이터 준비
-        // 조회된 리뷰
-        // id : 1번
-        // rating : 5
-        // content: 너무 좋았어요
-        // imageUrl : cdn.reviewimage.com
-
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new RuntimeException("리뷰가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorType.REVIEW_NOT_FOUND));
 
-        review.update(
+        User reviewUser = review.getUser();
+        Long reviewUserId = reviewUser.getId();
+        String reviewUserNickname = reviewUser.getNickname();
+
+        Reservation reviewReservation = review.getReservation();
+        Accommodation reviewReservationAccommodation = reviewReservation.getAccommodation();
+
+        Long reviewAccommodationId = reviewReservationAccommodation.getId();
+        String reviewAccommodationAccommodationName = reviewReservationAccommodation.getAccommodationName();
+        Double reviewRating = review.getRating();
+        String reviewContent = review.getContent();
+        String reviewImageUrl = review.getImageUrl();
+        LocalDateTime reviewCreatedAt = review.getCreatedAt();
+
+        UserDto userDto = new UserDto(reviewUserId, reviewUserNickname);
+        AccommodationDto accommodationDto = new AccommodationDto(reviewAccommodationId, reviewAccommodationAccommodationName);
+
+        ReviewDetailResponseDto responseDto = new ReviewDetailResponseDto(reviewId, userDto, accommodationDto, reviewRating, reviewContent, reviewImageUrl, reviewCreatedAt);
+        return responseDto;
+
+    }
+
+    /**
+     * 후기 전체 조회 기능
+     *
+     * @param accommodationId
+     * @param userId
+     * @param pageable
+     * @return
+     */
+    public ReviewPageResponseDto getReviewPageService(Long accommodationId, Long userId, Pageable pageable) {
+
+        // 데이터 준비
+        if (accommodationId != null && userId == null) {
+            Page<Review> accommodationReviewPage = reviewRepository.findAllByAccommodationId(accommodationId, pageable);
+            List<ReviewDetailResponseDto> reviewList = accommodationReviewPage.getContent().stream()
+                    .map(review -> new ReviewDetailResponseDto(
+                            review.getId(),
+                            null,
+                            new AccommodationDto(review.getAccommodation().getId(), review.getAccommodation().getAccommodationName()),
+                            review.getRating(),
+                            review.getContent(),
+                            review.getImageUrl(),
+                            review.getCreatedAt()
+                    ))
+                    .collect(Collectors.toList());
+
+            PageDto pageDto = new PageDto(
+                    accommodationReviewPage.getNumber() + 1,
+                    accommodationReviewPage.getSize(),
+                    accommodationReviewPage.getTotalPages(),
+                    accommodationReviewPage.getTotalElements());
+
+            ReviewPageResponseDto responseDto = new ReviewPageResponseDto<>(reviewList, pageDto);
+
+            return responseDto;
+        }
+
+        if (accommodationId == null && userId != null) {
+            Page<Review> userReviewPage = reviewRepository.findAllByUserId(userId, pageable);
+            List<ReviewDetailResponseDto> reviewList = userReviewPage.getContent().stream()
+                    .map(review -> new ReviewDetailResponseDto(
+                            review.getId(),
+                            new UserDto(review.getUser().getId(), review.getUser().getNickname()),
+                            null,
+                            review.getRating(),
+                            review.getContent(),
+                            review.getImageUrl(),
+                            review.getCreatedAt()
+                    ))
+                    .collect(Collectors.toList());
+
+            PageDto pageDto = new PageDto(
+                    userReviewPage.getNumber() + 1,
+                    userReviewPage.getSize(),
+                    userReviewPage.getTotalPages(),
+                    userReviewPage.getTotalElements());
+
+            ReviewPageResponseDto responseDto = new ReviewPageResponseDto<>(reviewList, pageDto);
+
+            return responseDto;
+        }
+
+        if (accommodationId != null && userId != null) {
+            Page<Review> accommodationAndUserReviewPage = reviewRepository.findAllByAccommodationIdAndUserId(accommodationId, userId, pageable);
+            List<ReviewDetailResponseDto> reviewList = accommodationAndUserReviewPage.getContent().stream()
+                    .map(review -> new ReviewDetailResponseDto(
+                            review.getId(),
+                            new UserDto(review.getUser().getId(), review.getUser().getNickname()),
+                            new AccommodationDto(review.getAccommodation().getId(), review.getAccommodation().getAccommodationName()),
+                            review.getRating(),
+                            review.getContent(),
+                            review.getImageUrl(),
+                            review.getCreatedAt()
+                    ))
+                    .collect(Collectors.toList());
+
+            PageDto pageDto = new PageDto(
+                    accommodationAndUserReviewPage.getNumber() + 1,
+                    accommodationAndUserReviewPage.getSize(),
+                    accommodationAndUserReviewPage.getTotalPages(),
+                    accommodationAndUserReviewPage.getTotalElements());
+
+            ReviewPageResponseDto responseDto = new ReviewPageResponseDto<>(reviewList, pageDto);
+
+            return responseDto;
+        }
+
+        Page<Review> reviewPage = reviewRepository.findAll(pageable);
+        List<ReviewDetailResponseDto> responseDtoList = reviewPage.getContent().stream()
+                .map(review -> new ReviewDetailResponseDto(
+                        review.getId(),
+                        new UserDto(review.getUser().getId(), review.getUser().getNickname()),
+                        new AccommodationDto(review.getAccommodation().getId(), review.getAccommodation().getAccommodationName()),
+                        review.getRating(),
+                        review.getContent(),
+                        review.getImageUrl(),
+                        review.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
+
+        PageDto pageDto = new PageDto(reviewPage.getNumber() + 1,
+                reviewPage.getSize(),
+                reviewPage.getTotalPages(),
+                reviewPage.getTotalElements());
+
+        ReviewPageResponseDto responseDto = new ReviewPageResponseDto<>(responseDtoList, pageDto);
+        return responseDto;
+
+    }
+
+    /**
+     * 후기 수정 기능
+     *
+     * @param reviewUpdateRequestDto
+     * @param reviewId
+     * @return
+     */
+    @Transactional
+    public ReviewUpdateResponseDto updateReviewService(ReviewUpdateRequestDto reviewUpdateRequestDto, Long reviewId, Long userPrincipalId) {
+
+        // 데이터 준비
+        Review review = reviewRepository.findByUserIdAndId(userPrincipalId, reviewId).orElseThrow(() -> new CustomException(ErrorType.REVIEW_NOT_FOUND_OR_FORBIDDEN));
+
+        User user = review.getUser();
+        String userNickname = user.getNickname();
+
+        Review updatedReview = review.update(
                 reviewUpdateRequestDto.getRating(),
-                reviewUpdateRequestDto.getContent(), // 기존값을 유지하고 싶은 경우
+                reviewUpdateRequestDto.getContent(),
                 reviewUpdateRequestDto.getImageUrl()
         );
-        // id : 1번
-        // rating : 4
-        // content: 너무 너무 좋았어요
-        // imageUrl : cdn.reviewimage.com
 
-        // transaction.commit();
-        // 쓰기지연 저장소:
-        // 어떤 쿼리가 저장 되냐면 1번리뷰의 내용이 "편했어요",
-        // 1번 리뷰의 내용이 "다시 생각해보니 정말 편안했어요"
-        // 최초에 DB에서 조회한 리뷰의 내용이랑, 트랜잭션 범위내에서 리뷰의 내용이랑 다르구나
-        // 다른걸 DB에 반영해줘야겠네 -> update 쿼리를 쓰기지연저장소에 생성해야겠네
-        // 트랜잭션 종료 시점에 DB한테 쿼리를 실행해야겠따 -> flush
-    } // 트랜잭션 종료 시점 -> flush: 쓰기지연 저장소에 있는 update 쿼리를 DB 반영
-    // 조회한 리뷰랑, 트랜잭션이 끝나는 시점에 리뷰가 다르면, 변경된사항들을 DB에 동기화 = 변경 감지(Dirty checking)
+        reviewRepository.saveAndFlush(updatedReview);
 
-    // 후기 삭제 기능
-    public void deleteReviewService(Long reviewId) {}
+        ReviewUpdateResponseDto responseDto = new ReviewUpdateResponseDto(
+                reviewId, userNickname, review.getRating(), review.getContent(), review.getImageUrl(), review.getCreatedAt(), updatedReview.getModifiedAt()
+        );
+
+        return responseDto;
+
+    }
+
+    /**
+     * 후기 삭제 기능
+     *
+     * @param reviewId
+     */
+    @Transactional
+    public void deleteReviewService(Long reviewId, Long userPrincipalId) {
+
+        // 데이터 준비
+        Review review = reviewRepository.findByUserIdAndId(userPrincipalId, reviewId)
+                .orElseThrow(() -> new CustomException(ErrorType.REVIEW_NOT_FOUND_OR_FORBIDDEN));
+
+        reviewRepository.delete(review);
+    }
 
 }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccommodationDto {
 
-    private Long id;
+    private Long accommodationId;
     private String name;
 
 }

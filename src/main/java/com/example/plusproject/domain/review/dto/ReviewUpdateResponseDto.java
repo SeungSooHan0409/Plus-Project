@@ -9,14 +9,14 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewDetailResponseDto {
+public class ReviewUpdateResponseDto {
 
     private Long reviewId;
-    private UserDto userDto;
-    private AccommodationDto accommodationDto;
-    private Double rating;
+    private String nickname;
+    private double rating;
     private String content;
     private String imageUrl;
     private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 
 }

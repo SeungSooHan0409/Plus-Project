@@ -2,14 +2,14 @@ package com.example.plusproject.domain.review.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class PageDto {
 
-    private Long userId;
-    private String nickname;
+    private int currentPage;
+    private int size;
+    private int totalPages;
+    private long totalElements;
 
 }
