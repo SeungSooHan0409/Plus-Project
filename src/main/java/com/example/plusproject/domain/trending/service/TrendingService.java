@@ -9,11 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
-import com.example.plusproject.common.exception.CustomException;
-import com.example.plusproject.common.exception.ErrorType;
 import com.example.plusproject.domain.trending.dto.TrendingResponseDto;
 
 import lombok.RequiredArgsConstructor;
@@ -37,8 +34,6 @@ public class TrendingService {
 				keys.add(key);
 			}
 		}
-
-		// TODO: 12시간 단위의 순위 집계해두고 있으면 그걸 불러오기
 
 		// 키들을 합쳐서 unionKey 생성
 		Set<String> topWords = Collections.emptySet();;
