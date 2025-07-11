@@ -1,7 +1,7 @@
 package com.example.plusproject.domain.review.entity;
 
-import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.common.entity.BaseTimeEntity;
+import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.reservation.entity.Reservation;
 import com.example.plusproject.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -14,19 +14,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Review extends BaseTimeEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int rating;
+    private double rating;
     private String content;
     private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    // todo: 레이지 로딩 찾아보기
     private User user;
 
     @OneToOne
-    @JoinColumn(name = "reservation_id")
+    @JoinColumn(name = "reservation_id", unique = true)
     private Reservation reservation;
 
     @ManyToOne
@@ -34,12 +36,21 @@ public class Review extends BaseTimeEntity {
     private Accommodation accommodation;
 
 
-    public Review(int rating, String content, String imageUrl, User user, Reservation reservation) {
+    public Review(double rating, String content, String imageUrl, User user, Reservation reservation, Accommodation accommodation) {
         this.rating = rating;
         this.content = content;
         this.imageUrl = imageUrl;
         this.user = user;
         this.reservation = reservation;
+        this.accommodation = accommodation;
+    }
+
+    // 응집도 향상을 위한 도메인 로직 구성
+    public Review update(double rating, String content, String imageUrl) {
+        this.rating = rating;
+        this.content = content;
+        this.imageUrl = imageUrl;
+        return this;
     }
 
 }
