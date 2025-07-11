@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +19,7 @@ public class TrendAspect {
 
 	private final RedisTemplate<String, String> redisTemplate; // RedisTemplate을 사용하여 Redis와 통신
 
-	@AfterReturning("execution(* com.example.plusproject..AccommodationController.searchAccommodations(..))")
+	@AfterReturning("execution(* com.example.plusproject..AccommodationController.searchAccommodationsV1(..))")
 	public void searchLogging(JoinPoint joinPoint) {
 		Object[] args = joinPoint.getArgs();
 
