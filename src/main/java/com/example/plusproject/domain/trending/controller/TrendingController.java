@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.plusproject.common.dto.ApiResponseDto;
 import com.example.plusproject.domain.trending.dto.TrendingResponseDto;
 import com.example.plusproject.domain.trending.service.TrendingService;
-import com.example.plusproject.domain.user.dto.AuthResponseDto;
 
 import lombok.RequiredArgsConstructor;
 

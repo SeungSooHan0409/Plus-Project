@@ -4,6 +4,9 @@ import com.example.plusproject.common.dto.ApiResponseDto;
 import com.example.plusproject.config.CustomUserPrincipal;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateRequestDto;
 import com.example.plusproject.domain.accommodation.dto.AccommodationCreateResponseDto;
+import com.example.plusproject.domain.accommodation.dto.AccommodationUpdateRequestDto;
+import com.example.plusproject.domain.accommodation.dto.AccommodationUpdateResponseDto;
+import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.accommodation.service.AccommodationService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -65,4 +68,14 @@ public class AccommodationController {
         return ResponseEntity.ok(new PageImpl<>(list, pageable, total));
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponseDto> updateAccommodation(
+            @PathVariable Long id,
+            @RequestBody AccommodationUpdateRequestDto dto,
+            @AuthenticationPrincipal CustomUserPrincipal userPrincipal
+    ) {
+        AccommodationUpdateResponseDto responseDto = accommodationService.updateAccommodation(id, dto, userPrincipal.getId());
+        ApiResponseDto response = ApiResponseDto.success("숙소 상세 정보 수정이 완료되었습니다.", responseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
