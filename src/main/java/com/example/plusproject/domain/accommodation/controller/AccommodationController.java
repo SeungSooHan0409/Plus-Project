@@ -2,10 +2,7 @@ package com.example.plusproject.domain.accommodation.controller;
 
 import com.example.plusproject.common.dto.ApiResponseDto;
 import com.example.plusproject.config.CustomUserPrincipal;
-import com.example.plusproject.domain.accommodation.dto.AccommodationCreateRequestDto;
-import com.example.plusproject.domain.accommodation.dto.AccommodationCreateResponseDto;
-import com.example.plusproject.domain.accommodation.dto.AccommodationUpdateRequestDto;
-import com.example.plusproject.domain.accommodation.dto.AccommodationUpdateResponseDto;
+import com.example.plusproject.domain.accommodation.dto.*;
 import com.example.plusproject.domain.accommodation.service.AccommodationService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -38,12 +35,12 @@ public class AccommodationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/v1/search")
-    public ResponseEntity<Page<AccommodationCreateResponseDto>> searchAccommodationsV1(
+    @GetMapping("/v1/search/keyword")
+    public ResponseEntity<Page<AccommodationKeywordSearchResponseDto>> searchAccommodationsV1(
             @RequestParam(required = false) String keyword,
             @PageableDefault Pageable pageable
     ) {
-        Page<AccommodationCreateResponseDto> accommodationsPage =
+        Page<AccommodationKeywordSearchResponseDto> accommodationsPage =
                 accommodationService.searchAccommodationsByNameOrAddressV1(keyword, pageable);
         return ResponseEntity.ok(accommodationsPage);
     }
@@ -57,12 +54,12 @@ public class AccommodationController {
 //        return ResponseEntity.ok(accommodationsPage);
 //    }
 
-    @GetMapping("/v3/search")
-    public ResponseEntity<Page<AccommodationCreateResponseDto>> searchAccommodationsV3(
+    @GetMapping("/v3/search/keyword")
+    public ResponseEntity<Page<AccommodationKeywordSearchResponseDto>> searchAccommodationsV3(
             @RequestParam(required = false) String keyword,
             @PageableDefault Pageable pageable
     ) {
-        List<AccommodationCreateResponseDto> list = accommodationService.searchAccommodationsByNameOrAddressV3(keyword, pageable);
+        List<AccommodationKeywordSearchResponseDto> list = accommodationService.searchAccommodationsByNameOrAddressV3(keyword, pageable);
         long total = accommodationService.countAccommodations(keyword);
         return ResponseEntity.ok(new PageImpl<>(list, pageable, total));
     }
