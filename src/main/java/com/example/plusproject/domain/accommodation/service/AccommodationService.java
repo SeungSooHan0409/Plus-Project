@@ -135,8 +135,22 @@ public class AccommodationService {
         return accommodationRepository.findByAddress(address);
     }
 
+    @Cacheable(value = "keywordCountCache", key = "#keyword")
     public long countAccommodations(String keyword) {
         return accommodationRepository.countAccommodationsByNameOrAddress(keyword);
     }
 
+    public Page<AccommodationSearchResponseDto> searchAccommodationsByCityV1(String city, Pageable pageable) {
+        return accommodationRepository.searchByCity(city, pageable);
+    }
+
+    @Cacheable(value = "citySearchCache", key = "#city + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
+    public List<AccommodationSearchResponseDto> searchAccommodationsByCityV3(String city, Pageable pageable) {
+        return accommodationRepository.searchByCity(city, pageable).getContent();
+    }
+
+    @Cacheable(value = "cityCountCache", key = "#city")
+    public long countAccommodationsByCity(String city) {
+        return accommodationRepository.countAccommodationsByCity(city);
+    }
 }
