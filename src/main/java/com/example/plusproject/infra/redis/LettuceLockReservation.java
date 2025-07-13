@@ -39,7 +39,7 @@ public class LettuceLockReservation {
             keys.offer(tmpKey);
         }
 
-        while(getLocks(keys)){                                    // lock 못잡으면 무한 대기
+        while(!getLocks(keys)){                                    // lock 못잡으면 무한 대기
             try{
                 Thread.sleep(100);                          // lock 획득 못했으면 100ms 후 다시 시도
             } catch (InterruptedException e){
@@ -59,22 +59,27 @@ public class LettuceLockReservation {
 
     // 여러개 lock 메서드
     private Boolean getLocks(Queue<String> keys){
-        while(!keys.isEmpty()){
-            String element = keys.poll();
-            redisLockRepository.lock(element);
+        Queue<String> copyKeys = new LinkedList<>(keys);
+        while(!copyKeys.isEmpty()){
+            String element = copyKeys.poll();
+            Boolean locked = redisLockRepository.lock(element);
+            // lock 하나라도 실패하면 이미 획득한 locks 해제 후 false 반환
+            if(locked ==null || !locked){
+                releaseLocks(keys);
+                return false;
+            }
         }
-        return true;
+        return true; // 전부 성공
     }
 
     // 여러개 unlock 메서드
     private Boolean releaseLocks(Queue<String> keys){
-        while(!keys.isEmpty()){
-            String element = keys.poll();
+        Queue<String> copyKeys = new LinkedList<>(keys);
+        while(!copyKeys.isEmpty()){
+            String element = copyKeys.poll();
             redisLockRepository.unlock(element);
         }
         return true;
     }
-
-
 
 }
