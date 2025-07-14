@@ -9,6 +9,7 @@ import com.example.plusproject.domain.user.enums.UserRole;
 import com.example.plusproject.domain.user.service.UserService;
 import com.example.plusproject.common.exception.ErrorType;
 import jakarta.validation.Valid;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ public class AccommodationService {
         this.userService = userService;
     }
 
+    @CacheEvict(value = {"accommodationSearchCacheV3", "keywordCountCache", "citySearchCache", "cityCountCache"}, allEntries = true)
     public AccommodationCreateResponseDto createAccommodation(@Valid AccommodationCreateRequestDto dto, Long userId) {
         User user = userService.findUserById(userId);
 
@@ -50,6 +52,7 @@ public class AccommodationService {
         return AccommodationCreateResponseDto.from(saved);
     }
 
+    @CacheEvict(value = {"accommodationSearchCacheV3", "keywordCountCache", "citySearchCache", "cityCountCache"}, allEntries = true)
     public AccommodationUpdateResponseDto updateAccommodation(Long id, AccommodationUpdateRequestDto dto, Long userId) {
 
         Accommodation accommodation = accommodationRepository.findById(id)
@@ -82,6 +85,7 @@ public class AccommodationService {
         return AccommodationUpdateResponseDto.from(savedAccommodation);
     }
 
+    @CacheEvict(value = {"accommodationSearchCacheV3", "keywordCountCache", "citySearchCache", "cityCountCache"}, allEntries = true)
     public void deleteAccommodation(Long id, Long userId) {
 
         Accommodation accommodation = accommodationRepository.findById(id)
