@@ -34,11 +34,6 @@ public class ReservationController {
         return ResponseEntity.ok(
                 lettuceLockReservation.makingReservation(requestDto.getGuestCount(), requestDto.getCheckInDate(),requestDto.getCheckOutDate() ,requestDto.getAccommodationAddress(), userId)
         );
-
-//        return ResponseEntity.ok(
-//                reservationService.reserveAccommodation(requestDto.getGuestCount(), requestDto.getCheckInDate(),requestDto.getCheckOutDate() ,requestDto.getAccommodationAddress(), userId)
-//        );
-
     }
 
 
