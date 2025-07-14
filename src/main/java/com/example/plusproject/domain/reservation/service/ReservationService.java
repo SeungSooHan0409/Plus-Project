@@ -49,6 +49,11 @@ public class ReservationService {
             throw new CustomException(ErrorType.ASSIGNED_DATE);
         }
 
+        // 수용인원 초과시 예외발생
+        if(guestCount > accommodation.getCapacity()) {
+            throw new CustomException(ErrorType.UNACCEPTABLE_CAPACITY);
+        }
+
         // 예약 생성
         Reservation reservation = new Reservation(accommodation, user, checkInDate, checkOutDate,guestCount);
 
