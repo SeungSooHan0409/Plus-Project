@@ -102,6 +102,11 @@ public class ReservationService {
                 .findById(id)
                 .orElseThrow(() -> new CustomException(ErrorType.RESERVATION_NOT_FOUND));
 
+        // 수용인원 초과시 예외발생
+        if(guestCount > reservation.getAccommodation().getCapacity()) {
+            throw new CustomException(ErrorType.UNACCEPTABLE_CAPACITY);
+        }
+
         // 인원 변경하기
         reservation.setGuestCount(guestCount);
         reservationRepository.save(reservation);
