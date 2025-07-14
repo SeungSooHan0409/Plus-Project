@@ -60,12 +60,17 @@ public class LettuceLockReservation {
     // 여러개 lock 메서드
     private Boolean getLocks(Queue<String> keys){
         Queue<String> copyKeys = new LinkedList<>(keys);
+        Queue<String> lockedKeys = new LinkedList<>();
         while(!copyKeys.isEmpty()){
             String element = copyKeys.poll();
             Boolean locked = redisLockRepository.lock(element);
+            // locked 가 true 이면 리스트에 추가되게 (locked 된 것만 담아)
+            if(locked){
+                lockedKeys.offer(element);
+            }
             // lock 하나라도 실패하면 이미 획득한 locks 해제 후 false 반환
             if(locked ==null || !locked){
-                releaseLocks(keys);
+                releaseLocks(lockedKeys); // 내가 잠근 lock 만 release
                 return false;
             }
         }
