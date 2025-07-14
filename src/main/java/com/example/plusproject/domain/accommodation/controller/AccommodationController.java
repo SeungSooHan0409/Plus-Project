@@ -95,4 +95,14 @@ public class AccommodationController {
         ApiResponseDto response = ApiResponseDto.success("숙소 상세 정보 수정이 완료되었습니다.", responseDto);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponseDto> deleteAccommodation(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserPrincipal userPrincipal
+    ) {
+        accommodationService.deleteAccommodation(id, userPrincipal.getId());
+        ApiResponseDto response = ApiResponseDto.success("숙소 정보 삭제가 완료되었습니다.", null);
+        return ResponseEntity.ok(response);
+    }
 }
