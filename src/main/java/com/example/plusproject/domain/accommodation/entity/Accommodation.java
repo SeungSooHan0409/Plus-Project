@@ -22,6 +22,7 @@ public class Accommodation extends BaseTimeEntity {
     private String accommodationName;
     private String address;
     private String city;
+    private int capacity;
     private String description;
     private String roomType;
     private String image;
@@ -33,10 +34,11 @@ public class Accommodation extends BaseTimeEntity {
     private User user;
 
 
-    public Accommodation(String accommodationName, String address, String city, String image, String description, String roomType, String services, double price, User user) {
+    public Accommodation(String accommodationName, String address, String city, int capacity, String image, String description, String roomType, String services, double price, User user) {
         this.accommodationName = accommodationName;
         this.address = address;
         this.city = city;
+        this.capacity = capacity;
         this.description = description;
         this.roomType = roomType;
         this.image = image;
@@ -56,6 +58,8 @@ public class Accommodation extends BaseTimeEntity {
     public void changeCity(String city) {
         this.city = city;
     }
+
+    public void changeCapacity(int capacity) {this.capacity = capacity; }
 
     public void changeDescription(String description) {
         this.description = description;
