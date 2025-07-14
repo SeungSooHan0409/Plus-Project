@@ -13,9 +13,12 @@ import com.example.plusproject.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +60,9 @@ public class FavoriteService {
         Page<Favorite> favorites = favoriteRepository.findAllByOrderByModifiedAt(pageable);
 
         // data 생성
-        Page<FavoriteData> data = favorites.map(Favorite::toData);
+        Page<FavoriteData> pageData = favorites.map(Favorite::toData);
+        List<FavoriteData> data = pageData.getContent();
+
 
         // 응답 반환
         return ApiResponseDto.success("조회 성공!", data);
@@ -76,7 +81,8 @@ public class FavoriteService {
         Page<Favorite> favorites = favoriteRepository.findAllByOrderByModifiedAt(pageable);
 
         // data 생성
-        Page<FavoriteData> data = favorites.map(Favorite::toData);
+        Page<FavoriteData> pageData = favorites.map(Favorite::toData);
+        List<FavoriteData> data =pageData.getContent();
 
         // 응답 반환
         return new ApiResponseDto(true, "조회 성공!", data, null);
