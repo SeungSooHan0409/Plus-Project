@@ -51,13 +51,13 @@ public class AccommodationService {
     }
 
     public AccommodationUpdateResponseDto updateAccommodation(Long id, AccommodationUpdateRequestDto dto, Long userId) {
-        User user = userService.findUserById(userId);
 
-        if(!user.getRole().equals(UserRole.HOST)) {
-            throw new CustomException(ErrorType.INVALID_USER);
+        Accommodation accommodation = accommodationRepository.findById(id)
+                .orElseThrow(()->new CustomException(ErrorType.NONEXISTENT_ACCOMMODATION));
+
+        if(!userId.equals(accommodation.getUser().getId())) {
+            throw new CustomException(ErrorType.NO_AUTHORITY_FOR_REVISION);
         }
-
-        Accommodation accommodation = accommodationRepository.findById(id).orElseThrow(()->new CustomException(ErrorType.NONEXISTENT_ACCOMMODATION));
 
         String newAccommodationName = dto.getAccommodationName();
         String newAddress = dto.getAddress();
@@ -68,41 +68,30 @@ public class AccommodationService {
         String newServices = dto.getServices();
         Double newPrice = dto.getPrice();
 
-        if(newAccommodationName != null && !newAccommodationName.isBlank()) {
-            accommodation.changeAccommodationName(newAccommodationName);
-        }
-
-        if(newAddress != null && !newAddress.isBlank()) {
-            accommodation.changeAddress(newAddress);
-        }
-
-        if(newCity != null && !newCity.isBlank()) {
-            accommodation.changeCity(newCity);
-        }
-
-        if(newDescription != null && !newDescription.isBlank()) {
-            accommodation.changeDescription(newDescription);
-        }
-
-        if(newRoomType != null && !newRoomType.isBlank()) {
-            accommodation.changeRoomType(newRoomType);
-        }
-
-        if(newImage != null && !newImage.isBlank()) {
-            accommodation.changeImage(newImage);
-        }
-
-        if(newServices != null && !newServices.isBlank()) {
-            accommodation.changeServices(newServices);
-        }
-
-        if(newPrice != null) {
-            accommodation.changePrice(newPrice);
-        }
+        if(dto.hasValidAccommodationName()) { accommodation.changeAccommodationName(newAccommodationName); }
+        if(dto.hasValidAddress()) { accommodation.changeAddress(newAddress); }
+        if(dto.hasValidCity()) { accommodation.changeCity(newCity); }
+        if(dto.hasValidDescription()) { accommodation.changeDescription(newDescription); }
+        if(dto.hasValidRoomType()) { accommodation.changeRoomType(newRoomType); }
+        if(dto.hasValidImage()) { accommodation.changeImage(newImage); }
+        if(dto.hasValidServices()) { accommodation.changeServices(newServices); }
+        if(dto.hasValidPrice()) { accommodation.changePrice(newPrice); }
 
         Accommodation savedAccommodation = accommodationRepository.save(accommodation);
 
         return AccommodationUpdateResponseDto.from(savedAccommodation);
+    }
+
+    public void deleteAccommodation(Long id, Long userId) {
+
+        Accommodation accommodation = accommodationRepository.findById(id)
+                .orElseThrow(()->new CustomException(ErrorType.NONEXISTENT_ACCOMMODATION));
+
+        if(!userId.equals(accommodation.getUser().getId())) {
+            throw new CustomException(ErrorType.NO_AUTHORITY_FOR_DELETION);
+        }
+
+        accommodationRepository.delete(accommodation);
     }
 
     // id로 엔티티 반환
