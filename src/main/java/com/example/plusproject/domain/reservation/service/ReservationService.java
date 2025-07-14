@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class ReservationService {
 
     // 숙소예약 메서드
     @Transactional
-    public ApiResponseDto reserveAccommodation(Long guestCount, LocalDate checkInDate, String accommodationAddress, Long userId) {
+    public ApiResponseDto reserveAccommodation(Long guestCount, LocalDate checkInDate, LocalDate checkOutDate, String accommodationAddress, Long userId) {
 
         // 유저 조회
         User user = userService.findUserById(userId);
@@ -38,13 +39,18 @@ public class ReservationService {
         // 숙소 조회
         Accommodation accommodation = accommodationService.findAccommodationByAddress(accommodationAddress);
 
-        // 예약 생성
-        Reservation reservation = new Reservation(accommodation, user, checkInDate, guestCount);
+        // 체크인 날짜 < 체크아웃 날짜
+        if(!(checkInDate.isBefore(checkOutDate))) {
+            throw new CustomException(ErrorType.INVALID_DATE);
+        }
 
-        // 같은 날짜에 같은 숙소 예약불가
-        if(reservationRepository.existsByAccommodationAndCheckInDate(accommodation, checkInDate)) {
+        // 겹치는 기간에 예약 불가능
+        if(!(reservationRepository.findOverlapped(accommodationAddress, checkInDate, checkOutDate).isEmpty())) {
             throw new CustomException(ErrorType.ASSIGNED_DATE);
         }
+
+        // 예약 생성
+        Reservation reservation = new Reservation(accommodation, user, checkInDate, checkOutDate,guestCount);
 
         // 예약 저장
         reservationRepository.save(reservation);
@@ -54,7 +60,8 @@ public class ReservationService {
                 reservation.getId(),
                 reservation.getAccommodation().getAddress(),
                 reservation.getGuestCount(),
-                reservation.getCheckInDate());
+                reservation.getCheckInDate(),
+                reservation.getCheckOutDate());
 
         // Response 반환
         return ApiResponseDto.success("예약 성공!", data);
@@ -95,6 +102,11 @@ public class ReservationService {
                 .findById(id)
                 .orElseThrow(() -> new CustomException(ErrorType.RESERVATION_NOT_FOUND));
 
+        // 수용인원 초과시 예외발생
+        if(guestCount > reservation.getAccommodation().getCapacity()) {
+            throw new CustomException(ErrorType.UNACCEPTABLE_CAPACITY);
+        }
+
         // 인원 변경하기
         reservation.setGuestCount(guestCount);
         reservationRepository.save(reservation);
@@ -103,7 +115,8 @@ public class ReservationService {
         ReservationData data = new ReservationData(reservation.getId(),
                 reservation.getAccommodation().getAddress(),
                 reservation.getGuestCount(),
-                reservation.getCheckInDate());
+                reservation.getCheckInDate(),
+                reservation.getCheckOutDate());
 
         return ApiResponseDto.success("변경 성공!", data);
 

@@ -15,11 +15,15 @@ public class ReservationData {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate checkInDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate checkOutDate;
 
-    public ReservationData(Long id, String accommodationAddress, Long guestCount, LocalDate checkInDate) {
+
+    public ReservationData(Long id, String accommodationAddress, Long guestCount, LocalDate checkInDate, LocalDate checkOutDate) {
         this.id = id;
         this.accommodationAddress = accommodationAddress;
         this.guestCount = guestCount;
         this.checkInDate = checkInDate;
+        this. checkOutDate = checkOutDate;
     }
 }

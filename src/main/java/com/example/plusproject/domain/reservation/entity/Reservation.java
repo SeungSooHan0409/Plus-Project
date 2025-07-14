@@ -24,6 +24,7 @@ public class Reservation extends BaseTimeEntity {
 
     private Long guestCount;
     private LocalDate checkInDate;
+    private LocalDate checkOutDate;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,11 +36,12 @@ public class Reservation extends BaseTimeEntity {
     private Accommodation accommodation;
 
 
-    public Reservation(Accommodation accommodation, User user, LocalDate checkInDate, Long guestCount) {
+    public Reservation(Accommodation accommodation, User user, LocalDate checkInDate, LocalDate checkOutDate ,Long guestCount) {
         this.accommodation = accommodation;
         this.user = user;
         this.checkInDate = checkInDate;
         this.guestCount = guestCount;
+        this.checkOutDate = checkOutDate;
     }
 
 
@@ -48,6 +50,7 @@ public class Reservation extends BaseTimeEntity {
                 reservation.getId(),
                 reservation.getAccommodation().getAddress(),
                 reservation.getGuestCount(),
-                reservation.getCheckInDate());
+                reservation.getCheckInDate(),
+                reservation.getCheckOutDate());
     }
 }
