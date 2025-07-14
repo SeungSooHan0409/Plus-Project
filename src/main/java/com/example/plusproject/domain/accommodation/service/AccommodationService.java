@@ -38,6 +38,7 @@ public class AccommodationService {
                 dto.getAccommodationName(),
                 dto.getAddress(),
                 dto.getCity(),
+                dto.getCapacity(),
                 dto.getImage(),
                 dto.getDescription(),
                 dto.getRoomType(),
@@ -62,6 +63,7 @@ public class AccommodationService {
         String newAccommodationName = dto.getAccommodationName();
         String newAddress = dto.getAddress();
         String newCity = dto.getCity();
+        Integer newCapacity = dto.getCapacity();
         String newDescription = dto.getDescription();
         String newRoomType = dto.getRoomType();
         String newImage = dto.getImage();
@@ -71,6 +73,7 @@ public class AccommodationService {
         if(dto.hasValidAccommodationName()) { accommodation.changeAccommodationName(newAccommodationName); }
         if(dto.hasValidAddress()) { accommodation.changeAddress(newAddress); }
         if(dto.hasValidCity()) { accommodation.changeCity(newCity); }
+        if(dto.hasValidCapacity()) { accommodation.changeCapacity(newCapacity); }
         if(dto.hasValidDescription()) { accommodation.changeDescription(newDescription); }
         if(dto.hasValidRoomType()) { accommodation.changeRoomType(newRoomType); }
         if(dto.hasValidImage()) { accommodation.changeImage(newImage); }

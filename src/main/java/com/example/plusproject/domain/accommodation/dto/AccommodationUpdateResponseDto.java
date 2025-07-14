@@ -2,6 +2,7 @@ package com.example.plusproject.domain.accommodation.dto;
 
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,6 +15,7 @@ public class AccommodationUpdateResponseDto {
     private String accommodationName;
     private String address;
     private String city;
+    private Integer capacity;
     private String description;
     private String roomType;
     private String image;
@@ -27,6 +29,7 @@ public class AccommodationUpdateResponseDto {
                 entity.getAccommodationName(),
                 entity.getAddress(),
                 entity.getCity(),
+                entity.getCapacity(),
                 entity.getDescription(),
                 entity.getRoomType(),
                 entity.getImage(),
@@ -36,5 +39,3 @@ public class AccommodationUpdateResponseDto {
         );
     }
 }
-
-// @JsonInclude(JsonInclude.Include.NON_NULL) : JSON 직렬화 시 null 값은 제외됨 (불필요한 필드 제거)
