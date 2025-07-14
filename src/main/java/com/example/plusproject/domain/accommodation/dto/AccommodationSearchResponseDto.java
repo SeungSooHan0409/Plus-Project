@@ -13,6 +13,7 @@ public class AccommodationSearchResponseDto {
     private String accommodationName;
     private String address;
     private String city;
+    private Integer capacity;
     private String description;
     private String roomType;
     private String image;
@@ -26,6 +27,7 @@ public class AccommodationSearchResponseDto {
                 entity.getAccommodationName(),
                 entity.getAddress(),
                 entity.getCity(),
+                entity.getCapacity(),
                 entity.getDescription(),
                 entity.getRoomType(),
                 entity.getImage(),

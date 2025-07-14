@@ -78,6 +78,7 @@ public class AccommodationRepositoryImpl implements AccommodationRepositoryCusto
                         accommodation.accommodationName,
                         accommodation.address,
                         accommodation.city,
+                        accommodation.capacity,
                         accommodation.description,
                         accommodation.roomType,
                         accommodation.image,
