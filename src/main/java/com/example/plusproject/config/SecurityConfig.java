@@ -34,7 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/signup","/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/reviews*",
-                                "/api/accommodations/search*", "/api/accomodations/search*", "/api/accomodations/city*",
+                                "/api/accommodations/v3/search/keyword*", "/api/accommodations/v3/search/city*",
                                 "/api/trending*").permitAll()   // 조회 로직 - 로그인 불필요
                         .anyRequest().authenticated()
                 )
