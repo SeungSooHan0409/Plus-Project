@@ -5,6 +5,7 @@ import com.example.plusproject.config.CustomUserPrincipal;
 import com.example.plusproject.domain.reservation.dto.GuestChangeRequestDto;
 import com.example.plusproject.domain.reservation.dto.RequestDto;
 import com.example.plusproject.domain.reservation.service.ReservationService;
+import com.example.plusproject.infra.redis.LettuceLockReservation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final LettuceLockReservation lettuceLockReservation;
 
     // 숙소 예약 API
     @PostMapping
@@ -28,9 +30,14 @@ public class ReservationController {
         // 토큰에서 userId 추출
         Long userId = userPrincipal.getId();
 
+        // lock 사용
         return ResponseEntity.ok(
-                reservationService.reserveAccommodation(requestDto.getGuestCount(), requestDto.getCheckInDate(),requestDto.getCheckOutDate() ,requestDto.getAccommodationAddress(), userId)
+                lettuceLockReservation.makingReservation(requestDto.getGuestCount(), requestDto.getCheckInDate(),requestDto.getCheckOutDate() ,requestDto.getAccommodationAddress(), userId)
         );
+
+//        return ResponseEntity.ok(
+//                reservationService.reserveAccommodation(requestDto.getGuestCount(), requestDto.getCheckInDate(),requestDto.getCheckOutDate() ,requestDto.getAccommodationAddress(), userId)
+//        );
 
     }
 

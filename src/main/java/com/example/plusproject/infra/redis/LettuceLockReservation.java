@@ -3,6 +3,7 @@ package com.example.plusproject.infra.redis;
 
 // spin lock 형태
 
+import com.example.plusproject.common.dto.ApiResponseDto;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.accommodation.service.AccommodationService;
 import com.example.plusproject.domain.reservation.service.ReservationService;
@@ -23,7 +24,7 @@ public class LettuceLockReservation {
     private final AccommodationService accommodationService;
 
 
-    public void makingReservation(Long guestCount, LocalDate checkInDate, LocalDate checkoutDate, String accommodationAddress, Long userId) {
+    public ApiResponseDto makingReservation(Long guestCount, LocalDate checkInDate, LocalDate checkoutDate, String accommodationAddress, Long userId) {
 
         // 숙소 조회
         Accommodation accommodation = accommodationService.findAccommodationByAddress(accommodationAddress);
@@ -49,9 +50,8 @@ public class LettuceLockReservation {
 
         // lock 을 획득 한 뒤에는
         try {                                                      // lock 잡고 while 문 벗어났다면 예약 확정
-            reservationService.reserveAccommodation(guestCount, checkInDate, checkoutDate, accommodationAddress, userId);
+            return reservationService.reserveAccommodation(guestCount, checkInDate, checkoutDate, accommodationAddress, userId);
         } finally{
-
             releaseLocks(keys);
         }
     }
