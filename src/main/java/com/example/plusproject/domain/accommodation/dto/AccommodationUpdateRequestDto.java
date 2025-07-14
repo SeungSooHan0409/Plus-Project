@@ -10,6 +10,7 @@ public class AccommodationUpdateRequestDto {
     private String accommodationName;
     private String address;
     private String city;
+    private Integer capacity;
     private String description;
     private String roomType;
     private String image;
@@ -27,6 +28,10 @@ public class AccommodationUpdateRequestDto {
 
     public boolean hasValidCity() {
         return city != null && !city.isBlank();
+    }
+
+    public boolean hasValidCapacity() {
+        return capacity != null && capacity > 0;
     }
 
     public boolean hasValidDescription() {
