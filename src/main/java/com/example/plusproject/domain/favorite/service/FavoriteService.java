@@ -11,10 +11,14 @@ import com.example.plusproject.domain.favorite.repository.FavoriteRepository;
 import com.example.plusproject.domain.user.entity.User;
 import com.example.plusproject.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -46,8 +50,8 @@ public class FavoriteService {
     }
 
 
-    // 찜목록 조회 메서드
-    public ApiResponseDto getFavorites(int page, int size) {
+    // 찜목록 조회 메서드 (캐시 사용 X)
+    public ApiResponseDto getFavoritesV1(int page, int size) {
 
         // Pageable 객체 생성
         Pageable pageable = PageRequest.of(page - 1, size);
@@ -56,10 +60,32 @@ public class FavoriteService {
         Page<Favorite> favorites = favoriteRepository.findAllByOrderByModifiedAt(pageable);
 
         // data 생성
-        Page<FavoriteData> data = favorites.map(Favorite::toData);
+        Page<FavoriteData> pageData = favorites.map(Favorite::toData);
+        List<FavoriteData> data = pageData.getContent();
+
 
         // 응답 반환
         return ApiResponseDto.success("조회 성공!", data);
+
+    }
+
+
+    // 찜목록 조회 메서드 (캐시 사용 O)
+    @Cacheable(value = "favorites")
+    public ApiResponseDto getFavoritesV2(int page, int size) {
+
+        // Pageable 객체 생성
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        // 찜목록 가져오기
+        Page<Favorite> favorites = favoriteRepository.findAllByOrderByModifiedAt(pageable);
+
+        // data 생성
+        Page<FavoriteData> pageData = favorites.map(Favorite::toData);
+        List<FavoriteData> data =pageData.getContent();
+
+        // 응답 반환
+        return new ApiResponseDto(true, "조회 성공!", data, null);
 
     }
 
