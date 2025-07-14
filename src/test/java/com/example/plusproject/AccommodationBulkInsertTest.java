@@ -30,7 +30,7 @@ public class AccommodationBulkInsertTest {
 
         User user = userRepository.save(User.builder()
                 .name("테스트이름3")
-                .nickname("testNickname3")
+                .nickname("testNickname4")
                 .email("test3@example.com")
                 .password("Test12312312!")
                 .phoneNumber("+8201011112222")
@@ -40,11 +40,12 @@ public class AccommodationBulkInsertTest {
 
         List<Accommodation> accommodations = new ArrayList<>();
 
-        for (int i = 1500000; i <= 2000000; i++) {
+        for (int i = 2000001; i <= 2050001; i++) {
             Accommodation accommodation = new Accommodation(
                     "숙소이름_" + i,
                     "수원시 팔달구 ... " + (i % 500),
-                    "수원시",
+                    "수원",
+                    2,
                     "image_" + i,
                     "설명_" + i,
                     "원룸",

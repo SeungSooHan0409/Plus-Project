@@ -16,14 +16,19 @@ public class RequestDto {
     private final LocalDate checkInDate;
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private final LocalDate checkOutDate;
+
+    @NotNull
     private final String accommodationAddress;
 
 
 
 
-    public RequestDto(Long guestCount, LocalDate checkInDate, String accommodationAddress) {
+    public RequestDto(Long guestCount, LocalDate checkInDate, LocalDate checkOutDate, String accommodationAddress) {
         this.guestCount = guestCount;
         this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
         this.accommodationAddress =accommodationAddress;
     }
 }

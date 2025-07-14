@@ -1,16 +1,15 @@
 package com.example.plusproject.domain.accommodation.dto;
 
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+// 생성자 dto를 통해서 불러오기 위해 필요
+@NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class AccommodationUpdateResponseDto {
-
+public class AccommodationKeywordSearchResponseDto {
     private Long id;
     private String accommodationName;
     private String address;
@@ -23,8 +22,8 @@ public class AccommodationUpdateResponseDto {
     private Double price;
     private Long hostId;
 
-    public static AccommodationUpdateResponseDto from(Accommodation entity) {
-        return new AccommodationUpdateResponseDto(
+    public static AccommodationKeywordSearchResponseDto from(Accommodation entity) {
+        return new AccommodationKeywordSearchResponseDto(
                 entity.getId(),
                 entity.getAccommodationName(),
                 entity.getAddress(),

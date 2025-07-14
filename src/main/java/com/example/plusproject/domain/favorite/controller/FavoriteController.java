@@ -31,14 +31,25 @@ public class FavoriteController {
     }
 
 
-    // 찜목록 조회
-    @GetMapping
-    public ResponseEntity<ApiResponseDto> getFavorites(
+    // 찜목록 조회 (캐시 사용 X)
+    @GetMapping("/v1")
+    public ResponseEntity<ApiResponseDto> getFavoritesV1(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
 
-        return ResponseEntity.ok(favoriteService.getFavorites(page, size));
+        return ResponseEntity.ok(favoriteService.getFavoritesV1(page, size));
+
+    }
+
+    // 찜목록 조회 (캐시 사용 O)
+    @GetMapping("/v2")
+    public ResponseEntity<ApiResponseDto> getFavoritesV2(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+
+        return ResponseEntity.ok(favoriteService.getFavoritesV2(page, size));
 
     }
 

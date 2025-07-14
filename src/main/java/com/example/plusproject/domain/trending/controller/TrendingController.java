@@ -21,12 +21,6 @@ public class TrendingController {
 
 	private final TrendingService trendingService;
 
-	@PostMapping("/api/test")
-	public ResponseEntity<Void> test(@RequestParam(required = false) String search) {
-
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
 	@GetMapping("/api/trending")
 	public ResponseEntity<ApiResponseDto> getTrending() {
 

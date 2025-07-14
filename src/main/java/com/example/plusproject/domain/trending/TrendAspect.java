@@ -19,7 +19,7 @@ public class TrendAspect {
 
 	private final RedisTemplate<String, String> redisTemplate; // RedisTemplate을 사용하여 Redis와 통신
 
-	@AfterReturning("execution(* com.example.plusproject..AccommodationController.searchAccommodationsV1(..))")
+	@AfterReturning("execution(* com.example.plusproject..AccommodationController.searchAccommodationsV3(..))")
 	public void searchLogging(JoinPoint joinPoint) {
 		Object[] args = joinPoint.getArgs();
 
