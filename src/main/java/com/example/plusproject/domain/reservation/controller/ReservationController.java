@@ -35,7 +35,7 @@ public class ReservationController {
     }
 
 
-    // 숙소 목록 조회 API
+    // 예약 목록 조회 API
     @GetMapping
     public ResponseEntity<ApiResponseDto> getReservations(
             @RequestParam(defaultValue = "1") int page,
