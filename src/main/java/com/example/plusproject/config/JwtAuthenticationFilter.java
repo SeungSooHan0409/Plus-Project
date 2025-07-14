@@ -1,5 +1,7 @@
 package com.example.plusproject.config;
 
+import com.example.plusproject.common.exception.CustomException;
+import com.example.plusproject.common.exception.ErrorType;
 import com.example.plusproject.domain.user.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -17,9 +19,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
 import java.util.Collections;
 
+
+/* spring security 와 jwt 필터 함께 사용시에 jwt 의 책임
+
+ 토큰이 있으면 인증단계 수행,
+      없으면 아무것도 수행하지 않음 */
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,17 +44,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         HttpServletRequest httpRequest = request;
         HttpServletResponse httpResponse = response;
 
-        String uri = httpRequest.getRequestURI();
-
-        if (uri.startsWith("/api/auth")) {
-            chain.doFilter(request, response);
-            return;
-        }
 
         String bearerJwt = httpRequest.getHeader("Authorization");
 
         if (bearerJwt == null) {
-            httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "JWT 토큰이 필요합니다.");
+            chain.doFilter(request, response);
             return;
         }
 
@@ -79,16 +81,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         } catch (SecurityException | MalformedJwtException e) {
             log.error("Invalid JWT signature, 유효하지 않은 JWT 서명입니다.", e);
-            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않은 JWT 서명입니다.");
+            throw new CustomException(ErrorType.SC_UNAUTHORIZED);
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token, 만료된 JWT token 입니다.", e);
-            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "만료된 JWT 토큰입니다.");
+            throw new CustomException(ErrorType.SC_UNAUTHORIZED);
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.", e);
-            httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "지원되지 않는 JWT 토큰입니다.");
+            throw new CustomException(ErrorType.SC_BAD_REQUEST);
         } catch (Exception e) {
             log.error("Internal server error", e);
-            httpResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new CustomException(ErrorType.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }

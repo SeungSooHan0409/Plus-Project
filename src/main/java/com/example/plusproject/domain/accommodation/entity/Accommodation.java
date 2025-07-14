@@ -73,10 +73,5 @@ public class Accommodation extends BaseTimeEntity {
         this.services = services;
     }
 
-    public void changePrice(double price) {
-        if(price <= 0) {
-            throw new CustomException(ErrorType.INVALID_PRICE);
-        }
-        this.price = price;
-    }
+    public void changePrice(double price) { this.price = price; }
 }
