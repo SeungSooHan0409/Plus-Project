@@ -79,7 +79,7 @@ public class FavoriteService {
         Page<FavoriteData> data = favorites.map(Favorite::toData);
 
         // 응답 반환
-        return ApiResponseDto.success("조회 성공!", data);
+        return new ApiResponseDto(true, "조회 성공!", data, null);
 
     }
 
