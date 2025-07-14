@@ -64,6 +64,27 @@ public class AccommodationController {
         return ResponseEntity.ok(new PageImpl<>(list, pageable, total));
     }
 
+    // v1 city 검색
+    @GetMapping("/v1/search/city")
+    public ResponseEntity<Page<AccommodationSearchResponseDto>> searchByCityV1(
+            @RequestParam String city,
+            @PageableDefault Pageable pageable
+    ) {
+        Page<AccommodationSearchResponseDto> result = accommodationService.searchAccommodationsByCityV1(city, pageable);
+        return ResponseEntity.ok(result);
+    }
+
+    // v3 city 검색
+    @GetMapping("/v3/search/city")
+    public ResponseEntity<Page<AccommodationSearchResponseDto>> searchByCityV3(
+            @RequestParam String city,
+            @PageableDefault Pageable pageable
+    ) {
+        List<AccommodationSearchResponseDto> list = accommodationService.searchAccommodationsByCityV3(city, pageable);
+        long total = accommodationService.countAccommodationsByCity(city);
+        return ResponseEntity.ok(new PageImpl<>(list, pageable, total));
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponseDto> updateAccommodation(
             @PathVariable Long id,
