@@ -1,10 +1,7 @@
 package com.example.plusproject.domain.accommodation.service;
 
 import com.example.plusproject.common.exception.CustomException;
-import com.example.plusproject.domain.accommodation.dto.AccommodationCreateRequestDto;
-import com.example.plusproject.domain.accommodation.dto.AccommodationCreateResponseDto;
-import com.example.plusproject.domain.accommodation.dto.AccommodationUpdateRequestDto;
-import com.example.plusproject.domain.accommodation.dto.AccommodationUpdateResponseDto;
+import com.example.plusproject.domain.accommodation.dto.*;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import com.example.plusproject.domain.accommodation.repository.AccommodationRepository;
 import com.example.plusproject.domain.user.entity.User;
@@ -12,6 +9,7 @@ import com.example.plusproject.domain.user.enums.UserRole;
 import com.example.plusproject.domain.user.service.UserService;
 import com.example.plusproject.common.exception.ErrorType;
 import jakarta.validation.Valid;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +28,7 @@ public class AccommodationService {
         this.userService = userService;
     }
 
+    @CacheEvict(value = {"accommodationSearchCacheV3", "keywordCountCache", "citySearchCache", "cityCountCache"}, allEntries = true)
     public AccommodationCreateResponseDto createAccommodation(@Valid AccommodationCreateRequestDto dto, Long userId) {
         User user = userService.findUserById(userId);
 
@@ -53,6 +52,7 @@ public class AccommodationService {
         return AccommodationCreateResponseDto.from(saved);
     }
 
+    @CacheEvict(value = {"accommodationSearchCacheV3", "keywordCountCache", "citySearchCache", "cityCountCache"}, allEntries = true)
     public AccommodationUpdateResponseDto updateAccommodation(Long id, AccommodationUpdateRequestDto dto, Long userId) {
 
         Accommodation accommodation = accommodationRepository.findById(id)
@@ -85,6 +85,7 @@ public class AccommodationService {
         return AccommodationUpdateResponseDto.from(savedAccommodation);
     }
 
+    @CacheEvict(value = {"accommodationSearchCacheV3", "keywordCountCache", "citySearchCache", "cityCountCache"}, allEntries = true)
     public void deleteAccommodation(Long id, Long userId) {
 
         Accommodation accommodation = accommodationRepository.findById(id)
@@ -103,9 +104,9 @@ public class AccommodationService {
                 .orElseThrow(()->new CustomException(ErrorType.NONEXISTENT_ACCOMMODATION));
     }
 
-    public Page<AccommodationCreateResponseDto> searchAccommodationsByNameOrAddressV1(String keyword, Pageable pageable) {
+    public Page<AccommodationKeywordSearchResponseDto> searchAccommodationsByNameOrAddressV1(String keyword, Pageable pageable) {
         Page<Accommodation> accommodations = accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
-        return accommodations.map(AccommodationCreateResponseDto::from);
+        return accommodations.map(AccommodationKeywordSearchResponseDto::from);
     }
 
 //    @Cacheable(value = "accommodationSearchCache", key = "#keyword")
@@ -114,10 +115,10 @@ public class AccommodationService {
 //    }
 
     @Cacheable(value = "accommodationSearchCacheV3", key = "#keyword + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
-    public List<AccommodationCreateResponseDto> searchAccommodationsByNameOrAddressV3(String keyword, Pageable pageable) {
+    public List<AccommodationKeywordSearchResponseDto> searchAccommodationsByNameOrAddressV3(String keyword, Pageable pageable) {
         Page<Accommodation> result = accommodationRepository.searchAccommodationsByNameOrAddress(keyword, pageable);
         return result.stream()
-                .map(AccommodationCreateResponseDto::from)
+                .map(AccommodationKeywordSearchResponseDto::from)
 //                .toList();
                 .collect(Collectors.toList());
     }
@@ -127,8 +128,22 @@ public class AccommodationService {
         return accommodationRepository.findByAddress(address);
     }
 
+    @Cacheable(value = "keywordCountCache", key = "#keyword")
     public long countAccommodations(String keyword) {
         return accommodationRepository.countAccommodationsByNameOrAddress(keyword);
     }
 
+    public Page<AccommodationSearchResponseDto> searchAccommodationsByCityV1(String city, Pageable pageable) {
+        return accommodationRepository.searchByCity(city, pageable);
+    }
+
+    @Cacheable(value = "citySearchCache", key = "#city + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
+    public List<AccommodationSearchResponseDto> searchAccommodationsByCityV3(String city, Pageable pageable) {
+        return accommodationRepository.searchByCity(city, pageable).getContent();
+    }
+
+    @Cacheable(value = "cityCountCache", key = "#city")
+    public long countAccommodationsByCity(String city) {
+        return accommodationRepository.countAccommodationsByCity(city);
+    }
 }

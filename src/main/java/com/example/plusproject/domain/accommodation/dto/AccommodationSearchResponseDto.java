@@ -3,11 +3,12 @@ package com.example.plusproject.domain.accommodation.dto;
 import com.example.plusproject.domain.accommodation.entity.Accommodation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
-public class AccommodationCreateResponseDto {
-
+public class AccommodationSearchResponseDto {
     private Long id;
     private String accommodationName;
     private String address;
@@ -19,8 +20,8 @@ public class AccommodationCreateResponseDto {
     private Double price;
     private Long hostId;
 
-    public static AccommodationCreateResponseDto from(Accommodation entity) {
-        return new AccommodationCreateResponseDto(
+    public static AccommodationSearchResponseDto from(Accommodation entity) {
+        return new AccommodationSearchResponseDto(
                 entity.getId(),
                 entity.getAccommodationName(),
                 entity.getAddress(),
