@@ -28,6 +28,7 @@ public class AccommodationService {
         this.userService = userService;
     }
 
+    @CacheEvict(value = {"accommodationSearchCacheV3", "keywordCountCache", "citySearchCache", "cityCountCache"}, allEntries = true)
     public AccommodationCreateResponseDto createAccommodation(@Valid AccommodationCreateRequestDto dto, Long userId) {
         User user = userService.findUserById(userId);
 
@@ -84,6 +85,7 @@ public class AccommodationService {
         return AccommodationUpdateResponseDto.from(savedAccommodation);
     }
 
+    @CacheEvict(value = {"accommodationSearchCacheV3", "keywordCountCache", "citySearchCache", "cityCountCache"}, allEntries = true)
     public void deleteAccommodation(Long id, Long userId) {
 
         Accommodation accommodation = accommodationRepository.findById(id)
