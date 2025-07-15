@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/reviews")
@@ -114,7 +116,7 @@ public class ReviewController {
     public ResponseEntity<ApiResponseDto> deleteReviewAPI(@PathVariable Long reviewId, @AuthenticationPrincipal CustomUserPrincipal userPrincipal) {
         Long userPrincipalId = userPrincipal.getId();
         reviewService.deleteReviewService(reviewId, userPrincipalId);
-        ApiResponseDto responseDto = ApiResponseDto.success("후기 삭제가 완료되었습니다.", null);
+        ApiResponseDto responseDto = ApiResponseDto.success("후기 삭제가 완료되었습니다.", Collections.EMPTY_MAP);
         // todo: null 안 보이게 코드 수정
         ResponseEntity<ApiResponseDto> response = new ResponseEntity<>(responseDto, HttpStatus.OK);
         return response;
