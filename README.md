@@ -311,3 +311,72 @@
 
 - **동시성 제어 구현 후 → 10명의 사용자가 동시 접속 시, 한명만 숙소 예약 가능**
 ![lock-4](./images/lock-4.webp)
+
+## ⚠️ 트러블슈팅 모음
+
+### 1. `@LastModifiedDate`가 갱신되지 않던 문제
+
+![troubleshooting-1](./images/troubleshooting-1.webp)
+[해결 이미지]
+
+- **문제**: `update` 메서드로 필드 값은 변경되지만, `modified_at` 값이 갱신되지 않음  
+- **원인**: JPA는 트랜잭션이 끝날 때까지 변경 내용을 DB에 반영하지 않기 때문  
+- **해결**: `saveAndFlush()` 또는 `flush()`를 호출하여 영속성 컨텍스트와 DB를 즉시 동기화  
+- **배운 점**: CQS(Command Query Separation) 원칙에 따라 Command와 Query를 분리하면 이런 문제를 방지할 수 있음
+
+
+### 2. 숙소 등록 시 JSON이 Accommodation 테이블에 저장되지 않던 문제
+
+- **문제**: 숙소 등록 시 JSON 데이터가 `Accommodation` 테이블에 저장되지 않음  
+- **원인**: `hibernate.ddl-auto` 설정이 `update`로 되어 있는 상태에서, `User` 엔티티의 `@Table`이 `@Table(name = "users")`로 변경됨. 이로 인해 `Accommodation` 테이블이 외래 키로 `user(id)`와 `users(id)` 두 개를 동시에 참조하는 상황이 발생
+- **해결**: IntelliJ DB탭에서 `accommodation` 테이블 우클릭 → Modify Table → 외래 키 중 `user(id)` 삭제  
+- **배운 점**: 실무에서는 `hibernate.ddl-auto=none`을 사용하고, 외래 키 설정은 명확히 수동으로 지정하는 것이 중요
+
+
+### 3. `Page<T>` 직렬화 오류와 리스트 변환 문제
+
+- **문제**: 서비스에서 `Page<T>` 객체를 그대로 캐시하거나 반환하려 할 때 직렬화 오류 발생  
+- **원인**: `Pageable`, `Sort` 등의 복잡한 구성요소는 직렬화에 부적합  
+- **해결**:  
+  - `Page<T>` 대신 단순한 `List<T>` 형태로 캐시하여 직렬화 안정성 확보  
+  - `new PageImpl<>(list, pageable, total)` 형태로 반환
+  - `.toList()`는 불변 리스트이므로 `.collect(Collectors.toList())`로 변환하여 직렬화에 안정화  
+- **배운 점**: 캐시나 외부 시스템과 연동 시에는 직렬화 안정성을 항상 고려해야 함
+
+
+### 4. nGrinder Agent <-> Docker Container 연결 문제
+
+![troubleshooting-2](./images/troubleshooting-2.webp)
+
+- **문제**: Agent에서 반복적인 연결 에러 발생  
+- **원인**: `Docker Container`를 내부 포트만 열고 외부 포트는 막은 채 실행함 → `Agent`가 외부에서 연결할 수 없음
+![troubleshooting-3](./images/troubleshooting-3.webp)
+- **해결**: `Agent`가 사용하는 포트(12000 ~ 12020)를 개방하여 연결 성공  
+- **배운 점**: 부하 테스트 환경 구축 시 네트워크 포트 설정까지 꼼꼼히 점검할 것
+
+
+### 5. Redis 데이터가 바이너리 형태로 저장되는 문제
+
+- **문제**: Redis에 저장된 데이터가 바이너리 형태로 저장되어, 내용을 직접 확인하고 이해하기 어려움  
+- **원인**:
+  - `build.gradle`에 Redis 의존성을 추가하면, 스프링이 자동으로 `RedisTemplate<Object, Object>` 타입의 빈을 생성함
+  - 이때, 기본 직렬화기로 `JdkSerializationRedisSerializer`를 사용하여 데이터를 Java 바이트 배열 형태로 저장함
+  - 이로 인해 저장된 데이터가 사람이 읽기 어려운 바이너리 형식으로 나타남
+- **해결**:  
+  - `RedisTemplate<String, String>` 빈을 수동 등록  
+  - Key/Value 모두에 `StringRedisSerializer`를 지정하여 문자열 형태로 직렬화함
+  - 그 결과 데이터가 사람이 읽기 쉬운 문자열 형태로 저장되고, 디버깅과 관리가 훨씬 편리함
+- **배운 점**: 개발/운영 환경에서는 가독성과 디버깅 편의를 위해 직렬화 방식을 명확히 지정하는 것이 중요
+
+
+### 6. 여러 키에 lock 걸 때 일부 실패 시 unlock 문제
+
+![troubleshooting-4](./images/troubleshooting-4.webp)
+
+- **문제**: 여러 키에 lock을 동시에 걸 때, 하나라도 실패하면 **모두** unlock되는 현상  
+- **원인**: lock 성공 여부를 체크하지 않음  
+- **해결**:  
+  - 락 성공한 키만 별도의 큐에 저장  
+  - 하나라도 실패 시, **큐에 저장된 키들만** unlock 처리  
+- **배운 점**: 락은 원자성과 정합성이 중요한 만큼, 성공/실패 로직을 명확히 분리하여 관리할 것
+
